@@ -1,0 +1,117 @@
+html
+{
+	width: 700px;
+	height: 600px;
+}
+
+body
+{
+	background: black;
+	font-size: 12pt;
+	color: gray;
+	width: 96%;
+	height: 96%;
+}
+
+table
+{	
+	width: 100%;
+	height: 60%;
+	table-layout:fixed;
+}
+
+td
+{
+	height: 100%;
+}
+
+td.td1
+{
+	width: 45%
+	vertical-align: top;
+}
+
+#sr_dn_block
+{
+	height: 100%;
+}
+
+#downloaded_comics
+{
+	color: white;
+	background: black;
+	width: 73%;
+}
+
+#url
+{
+	width: 98%;
+	background: black;
+	color: white;
+}
+
+select.chap
+{
+	width: 44%;
+	height: 40%;
+	color: white;
+	background: black;
+}
+
+#show_select
+{
+	margin-bottom: 20%;
+}
+
+#download
+{
+	margin-top: 2%;
+	width: 100%;
+}
+
+td.td2
+{
+	width: 55%;
+}
+
+#cover_block
+{
+	text-align: center;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+#msg_block
+{
+	border-style: solid;
+	border-width: 1px;
+	border-color: gray;
+	height: 30%;
+	overflow: auto;
+	background: black;
+	color: white;
+}
+
+#progress_bar
+{
+	/*overflow: hidden;	/*IE6 下要讓 div 高度小於 12px 則必須添加此屬性*/
+	margin-top: 2%;
+	height: 3%;
+	background: orange;
+}
+
+#search
+{
+        width: 32%;
+}
+
+#dw_to
+{
+        width: 32%;
+}
+
+#open_dw_folder
+{
+        width: 32%;
+}

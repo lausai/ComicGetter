@@ -1,0 +1,60 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>ComicGetter 1.0</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<HTA:APPLICATION
+	applicationname="ComicGetter"
+        singleinstance="yes"
+	windowstate="normal"
+	scroll="no"
+	border="thin"
+	MAXIMIZEBUTTON="no"
+>
+
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+</head>
+
+<body>
+	<table>
+	<tr>
+		<td class="td1">
+			<div id="sr_dn_block">
+			歷史紀錄：<select id="downloaded_comics"></select>
+			<br>
+			<input id="url" type="text"> &nbsp
+                        <br>
+			<input id="search" type="button" value="搜尋">
+			<input id="dw_to" type="button" value="下載到">
+                        <input id="open_dw_folder" type="button" value="下載目錄">
+			<br>
+			<br>
+			<span id="comic_name">&nbsp</span>
+                        <hr>
+			<br>
+			<select id="comic_chaps" class="chap"></select>
+			<input id="show_select" type="button" value=">>">
+			<select id="select_chaps" class="chap"></select>
+			<input id="download" type="button" value="下載">
+			</div>
+		</td>
+		<td class="td2"><div id="cover_block" ></div></td>
+	</tr>
+	</table><hr>
+	<div id="msg_block" class="block_border"></div>
+	<div id="progress_bar"></div>
+</body>
+
+<script type="text/javascript" src="scripts/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="scripts/comic8parser.js"></script>
+<script type="text/javascript" src="scripts/comic99770parser.js"></script>
+<script type="text/javascript" src="scripts/helper.js"></script>
+<script type="text/javascript" src="scripts/logger.js"></script>
+<script type="text/javascript" src="scripts/progress-displayer.js"></script>
+<script type="text/javascript" src="scripts/chapter-manager.js"></script>
+<script type="text/javascript" src="scripts/preference.js"></script>
+<script type="text/javascript" src="scripts/comic-history.js"></script>
+<script type="text/javascript" src="scripts/http-downloader.js"></script>
+<script type="text/javascript" src="scripts/main.js"></script>
+</html>
