@@ -1,4 +1,4 @@
-// Move the window to the middle of the screen
+﻿// Move the window to the middle of the screen
 function windowToMiddle() {
         var windowWidth  = 700;
         var windowHeight = 650;
@@ -88,7 +88,7 @@ function writeMessage(message) {
 }
 
 function clearMessage() {
-        $('#msg_block').html('');
+//        $('#msg_block').html('');
 }
 
 // Display the cover of the comic
@@ -141,8 +141,7 @@ function search() {
         }
 }
 
-function download() {
-        setUIByStatus('start_download');
+function download(parser, selectedChapters) {
         clearMessage();
         logger.deleteLog();
         
@@ -152,8 +151,6 @@ function download() {
         // If the path contains some invalid characters, strip it.
         if (!fso.FolderExists(comicPath))
                 fso.CreateFolder(comicPath);
-        
-        var selectedChapters = chapterManager.getSelectedChapters();
 
         for (var i = 0; i < selectedChapters.length; i++) {
                 var justDownloadIt = true;
@@ -180,7 +177,6 @@ function download() {
 
         history.addComicInfo(parser.getComicName(), parser.getComicUrl(), parser.getParserName());
         showDownloadedComics(history);
-        setUIByStatus('after_download');
 }
 
 // If user copys http url, then paste it to url input box automatically
@@ -193,6 +189,16 @@ function pasteIfUrlCopied() {
         if (data && 0 == data.indexOf('http:\/\/') && data != pasteIfUrlCopied['previous_url']) {
                 $('#url').val(data);
                 pasteIfUrlCopied['previous_url'] = data;
+        }
+}
+
+function downloadIfHasTask() {
+        writeMessage('task length: ' + taskQueue.length);
+
+        while (taskQueue.length > 0) {
+                var task = taskQueue.shift();
+
+                download(task['parser'], task['chapters']);
         }
 }
 
@@ -209,6 +215,7 @@ var downloader     = new HttpDownloader();
 var history        = new ComicHistory();
 var preference     = new Preference();
 var winhttp        = new ActiveXObject('MSXML2.XMLHTTP.3.0');
+var taskQueue      = [];
 
 $(window).on('beforeunload', function() {
         history.save();
@@ -224,9 +231,11 @@ $('#url').on('keyup', function(e) {
 
 // Display the comic chapters that user selected.
 $('#show_select').on('click', function() {
-        chapterManager.clearSelectChapters();
-        chapterManager.showSelectChapters();
-        setUIByStatus('after_select');
+        if ($('#comic_chaps option:selected').length > 0) {
+                chapterManager.clearSelectChapters();
+                chapterManager.showSelectChapters();
+                setUIByStatus('after_select');
+        }
 });
 
 // Display the url if user select a comic in the comic download histroy list.
@@ -260,8 +269,20 @@ $('#open_dw_folder').on('click', function() {
                 new ActiveXObject('Shell.Application').Open(path);
 });
 
+//$('#download').on('click', download);
+$('#download').on('click', function() {
+        setUIByStatus('start_download');
+
+        var task = {
+                'parser'   : parser,
+                'chapters' : chapterManager.getSelectedChapters()
+        };
+
+        taskQueue.push(task);
+        setUIByStatus('program_start');
+});
+
 $('#search').on('click', search);
-$('#download').on('click', download);
 
 $('#comic_chaps').attr('multiple', true);
 $('#select_chaps').attr('multiple', true);
@@ -273,3 +294,4 @@ showDownloadedComics(history);
 
 pasteIfUrlCopied();
 setInterval(pasteIfUrlCopied, 1000);
+setInterval(downloadIfHasTask, 1000);

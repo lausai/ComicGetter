@@ -7,7 +7,6 @@ function Logger() {
         };
 
         this.log = function(errorMsg) {
-                alert('in log');
                 var file        = fso.OpenTextFile(fileName, 8, true, -1);
                 var date        = new Date();
                 var errorString = date.getFullYear() + "/" + 
