@@ -1,4 +1,4 @@
-// Move the window to the middle of the screen
+﻿// Move the window to the middle of the screen
 function windowToMiddle() {
         var windowWidth  = 700;
         var windowHeight = 650;
@@ -11,8 +11,9 @@ function windowToMiddle() {
 
 // Display the comics that already downloaded before
 function showDownloadedComics(history) {
-        $node = $('#downloaded_comics');
-        $node.empty();
+        var $node = $('#downloaded_comics');
+
+        $node[0].options.length = 0;
         
         // Append a empty option first so the user can select
         // if only one comic in history list
@@ -67,10 +68,10 @@ function setUIByStatus(theStatus) {
                 case 'after_select':
                         $('#download').attr('disabled', false);
                         break;
-                case 'start_download':
+                case 'before_push_task':
                         disableAll();
                         break;
-                case 'after_download':
+                case 'after_push_task':
                         $('#url').attr('readonly', false);
                         $('#search, #download, #show_select, #downloaded_comics, #dw_to').attr('disabled', false);
                         break;
@@ -141,8 +142,7 @@ function search() {
         }
 }
 
-function download() {
-        setUIByStatus('start_download');
+function download(parser, selectedChapters) {
         clearMessage();
         logger.deleteLog();
         
@@ -152,8 +152,6 @@ function download() {
         // If the path contains some invalid characters, strip it.
         if (!fso.FolderExists(comicPath))
                 fso.CreateFolder(comicPath);
-        
-        var selectedChapters = chapterManager.getSelectedChapters();
 
         for (var i = 0; i < selectedChapters.length; i++) {
                 var justDownloadIt = true;
@@ -174,13 +172,12 @@ function download() {
                                 downloader.addHeader(key, headers[key]);
 
                         downloader.getFiles();
-                        writeMessage(chapterName + '下載完畢！');
+                        writeMessage(parser.getComicName() + ' ' + chapterName + '下載完畢！');
                 }
         }
 
         history.addComicInfo(parser.getComicName(), parser.getComicUrl(), parser.getParserName());
         showDownloadedComics(history);
-        setUIByStatus('after_download');
 }
 
 // If user copys http url, then paste it to url input box automatically
@@ -193,6 +190,14 @@ function pasteIfUrlCopied() {
         if (data && 0 == data.indexOf('http:\/\/') && data != pasteIfUrlCopied['previous_url']) {
                 $('#url').val(data);
                 pasteIfUrlCopied['previous_url'] = data;
+        }
+}
+
+function downloadIfHasTask() {
+        while (taskQueue.length > 0) {
+                var task = taskQueue.shift();
+
+                download(task['parser'], task['chapters']);
         }
 }
 
@@ -209,6 +214,7 @@ var downloader     = new HttpDownloader();
 var history        = new ComicHistory();
 var preference     = new Preference();
 var winhttp        = new ActiveXObject('MSXML2.XMLHTTP.3.0');
+var taskQueue      = [];
 
 $(window).on('beforeunload', function() {
         history.save();
@@ -224,9 +230,11 @@ $('#url').on('keyup', function(e) {
 
 // Display the comic chapters that user selected.
 $('#show_select').on('click', function() {
-        chapterManager.clearSelectChapters();
-        chapterManager.showSelectChapters();
-        setUIByStatus('after_select');
+        if ($('#comic_chaps option:selected').length > 0) {
+                chapterManager.clearSelectChapters();
+                chapterManager.showSelectChapters();
+                setUIByStatus('after_select');
+        }
 });
 
 // Display the url if user select a comic in the comic download histroy list.
@@ -260,8 +268,19 @@ $('#open_dw_folder').on('click', function() {
                 new ActiveXObject('Shell.Application').Open(path);
 });
 
+$('#download').on('click', function() {
+        setUIByStatus('before_push_task');
+
+        var task = {
+                'parser'   : parser,
+                'chapters' : chapterManager.getSelectedChapters()
+        };
+
+        taskQueue.push(task);
+        setUIByStatus('after_push_task');
+});
+
 $('#search').on('click', search);
-$('#download').on('click', download);
 
 $('#comic_chaps').attr('multiple', true);
 $('#select_chaps').attr('multiple', true);
@@ -273,3 +292,4 @@ showDownloadedComics(history);
 
 pasteIfUrlCopied();
 setInterval(pasteIfUrlCopied, 1000);
+setInterval(downloadIfHasTask, 1000);
