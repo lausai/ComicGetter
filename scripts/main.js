@@ -11,8 +11,9 @@ function windowToMiddle() {
 
 // Display the comics that already downloaded before
 function showDownloadedComics(history) {
-        $node = $('#downloaded_comics');
-        $node.empty();
+        var $node = $('#downloaded_comics');
+
+        $node[0].options.length = 0;
         
         // Append a empty option first so the user can select
         // if only one comic in history list
@@ -67,10 +68,10 @@ function setUIByStatus(theStatus) {
                 case 'after_select':
                         $('#download').attr('disabled', false);
                         break;
-                case 'start_download':
+                case 'before_push_task':
                         disableAll();
                         break;
-                case 'after_download':
+                case 'after_push_task':
                         $('#url').attr('readonly', false);
                         $('#search, #download, #show_select, #downloaded_comics, #dw_to').attr('disabled', false);
                         break;
@@ -88,7 +89,7 @@ function writeMessage(message) {
 }
 
 function clearMessage() {
-//        $('#msg_block').html('');
+        $('#msg_block').html('');
 }
 
 // Display the cover of the comic
@@ -171,7 +172,7 @@ function download(parser, selectedChapters) {
                                 downloader.addHeader(key, headers[key]);
 
                         downloader.getFiles();
-                        writeMessage(chapterName + '下載完畢！');
+                        writeMessage(parser.getComicName() + ' ' + chapterName + '下載完畢！');
                 }
         }
 
@@ -193,8 +194,6 @@ function pasteIfUrlCopied() {
 }
 
 function downloadIfHasTask() {
-        writeMessage('task length: ' + taskQueue.length);
-
         while (taskQueue.length > 0) {
                 var task = taskQueue.shift();
 
@@ -269,9 +268,8 @@ $('#open_dw_folder').on('click', function() {
                 new ActiveXObject('Shell.Application').Open(path);
 });
 
-//$('#download').on('click', download);
 $('#download').on('click', function() {
-        setUIByStatus('start_download');
+        setUIByStatus('before_push_task');
 
         var task = {
                 'parser'   : parser,
@@ -279,7 +277,7 @@ $('#download').on('click', function() {
         };
 
         taskQueue.push(task);
-        setUIByStatus('program_start');
+        setUIByStatus('after_push_task');
 });
 
 $('#search').on('click', search);
