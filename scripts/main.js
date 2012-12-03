@@ -131,9 +131,15 @@ function search() {
                 if (coverUrl)
                         sendRequest(coverUrl, showCover, null);
                 
-                chapterManager.clearSelectChapters();
-                chapterManager.clearComicChapters();
-                chapterManager.showComicChapters(parser.getChapters());
+                $('#select_chaps')[0].options.length = 0;
+
+                var $comicChapters = $('#comic_chaps');
+                var chapters       = parser.getChapters();
+
+                $comicChapters[0].options.length = 0;
+                for (var i = 0; i < chapters.length; i++)
+                        $comicChapters.append('<option>' + chapters[i] + '</option>');
+
                 $('#comic_name').html(parser.getComicName());
                 setUIByStatus('after_search');
         } else {
@@ -209,7 +215,6 @@ windowToMiddle();
 
 var parser; 
 var logger         = new Logger();
-var chapterManager = new ChapterManager();
 var downloader     = new HttpDownloader();
 var history        = new ComicHistory();
 var preference     = new Preference();
@@ -231,8 +236,10 @@ $('#url').on('keyup', function(e) {
 // Display the comic chapters that user selected.
 $('#show_select').on('click', function() {
         if ($('#comic_chaps option:selected').length > 0) {
-                chapterManager.clearSelectChapters();
-                chapterManager.showSelectChapters();
+                var $selectedChapters = $('#select_chaps');
+
+                $selectedChapters[0].options.length = 0;
+                $selectedChapters.append($('#comic_chaps').find(':selected').clone());
                 setUIByStatus('after_select');
         }
 });
@@ -270,10 +277,17 @@ $('#open_dw_folder').on('click', function() {
 
 $('#download').on('click', function() {
         setUIByStatus('before_push_task');
+        
+        var chapters = [];
+
+        $('#select_chaps').find('option').each(function(i, elm) {
+                chapters[i] = elm.text;
+        });
+
 
         var task = {
                 'parser'   : parser,
-                'chapters' : chapterManager.getSelectedChapters()
+                'chapters' : chapters
         };
 
         taskQueue.push(task);
