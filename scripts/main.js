@@ -305,5 +305,5 @@ downloader.setLogger(logger);
 showDownloadedComics(history);
 
 pasteIfUrlCopied();
-setInterval(pasteIfUrlCopied, 1000);
-setInterval(downloadIfHasTask, 1000);
+setInterval(pasteIfUrlCopied, 200);
+setInterval(downloadIfHasTask, 200);
