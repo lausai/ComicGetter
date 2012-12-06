@@ -124,7 +124,7 @@ function search() {
 
         setUIByStatus('start_search');
         parser = getParserNameByUrl(url);
-
+        
         if (parser && parser.startParse(url)) {
                 var coverUrl = parser.getCoverUrl();
                 // Send an asynchronous http request to get comic cover

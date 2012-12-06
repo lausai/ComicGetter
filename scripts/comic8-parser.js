@@ -24,28 +24,11 @@ Comic8Parser.prototype._checkUrl = function(url) {
         return /^http:\/\/www\.8comic\.com\/(html\/)?[0-9]+\.html$/.test(url);
 }
 
-Comic8Parser.prototype._getPage = function(url, type) {
-        this._whrObj.Open('GET', url, true);
-        this._whrObj.Send();
-
-        try {
-                this._whrObj.WaitForResponse();
-
-                if ('body' == type)
-                        return this._whrObj.ResponseBody();
-                else
-                        return this._whrObj.ResponseText();
-        } catch (e) {
-                logger.log('getPage fail. Error: ' + e.message);
-                return null;
-        }
-}
-
 // Return a table, the content should be 
 // key  : catid
 // value: baseurl
 Comic8Parser.prototype._getBaseurlTable = function(catid) {
-        var jsContent = this._getPage('http://www.8comic.com/js/comicview.js', 'text');
+        var jsContent = this._getPageByType('http://www.8comic.com/js/comicview.js', 'text');
 
         if (!jsContent) return null;
 
@@ -66,7 +49,7 @@ Comic8Parser.prototype._getBaseurlTable = function(catid) {
 // Search the comic information from the content of mainPage string
 // ex:  comic name
 //      chapter names
-Comic8Parser.prototype._getComicInfo = function(mainPage) {
+Comic8Parser.prototype._parseComicInfo = function(mainPage) {
         // Get comic name
         var match = mainPage.match(/font:12pt;font-weight:bold;">(.+?)<\/font>/);
 
@@ -101,7 +84,7 @@ Comic8Parser.prototype.startParse = function(url) {
         if (!this._checkUrl(url)) return false;
 
         this._url = url;
-        var mainPage = this._getPage(url, 'body');
+        var mainPage = this._getPageByType(url, 'body');
 
         // We use the "COM object" winhttp to get web page content.
         // The data returned from winhttp cannot be identified by jscript.
@@ -109,22 +92,10 @@ Comic8Parser.prototype.startParse = function(url) {
         if (null == mainPage) return false;
 
         mainPage = changeCharset(mainPage, 'Big5');
-        if (!this._getComicInfo(mainPage)) return false;
+        if (!this._parseComicInfo(mainPage)) return false;
         
         this._parseSucceed = true;
         return true;
-}
-
-Comic8Parser.prototype.getComicName = function() {
-        if (!this._parseSucceed) return null;
-
-        return this._comicName;
-}
-
-Comic8Parser.prototype.getChapters = function() {
-        if (!this._parseSucceed) return null;
-
-        return this._comicChapters;
 }
 
 Comic8Parser.prototype.getPicUrls = function(chapter) {
@@ -132,7 +103,7 @@ Comic8Parser.prototype.getPicUrls = function(chapter) {
 
         var index  = $.inArray(chapter, this._comicChapters);
         var volUrl = this._comicChapterUrls[index];
-        var page   = this._getPage(volUrl, 'body');
+        var page   = this._getPageByType(volUrl, 'body');
         
         if (null == page) return null;
         page = changeCharset(page, 'Big5');
@@ -170,18 +141,6 @@ Comic8Parser.prototype.getPicUrls = function(chapter) {
         return urls;
 }
 
-// Must call getPicUrls before calling this method
-Comic8Parser.prototype.headersNeeded = function() {
-        if (!this._parseSucceed) return null;
-
-        var res = {'Referer' : this._referer};
-        return res;
-}
-
-Comic8Parser.prototype.parseName = function() {
-        return 'Comic8Parser';
-}
-
 Comic8Parser.prototype.getCoverUrl = function() {
         if (!this._parseSucceed) return null;
 
@@ -191,16 +150,13 @@ Comic8Parser.prototype.getCoverUrl = function() {
         return 'http://www.8comic.com/pics/0/' + arr[0] + '.jpg';
 }
 
-Comic8Parser.prototype.getComicUrl = function() {
-        if (!this._parseSucceed) return null; 
-
-        return this._url;
-}
-
-Comic8Parser.prototype.setLogger = function(logger) {
-        this._logger = logger;
-}
-
 Comic8Parser.prototype.getParserName = function() {
         return 'Comic8Parser';
 }
+
+Comic8Parser.prototype._getPageByType = CommonParserInterfaces.getPageByType;
+Comic8Parser.prototype.getComicName   = CommonParserInterfaces.getComicName;
+Comic8Parser.prototype.getChapters    = CommonParserInterfaces.getChapters;
+Comic8Parser.prototype.headersNeeded  = CommonParserInterfaces.headersNeeded;    // Must call getPicUrls before calling this method
+Comic8Parser.prototype.getComicUrl    = CommonParserInterfaces.getComicUrl;
+Comic8Parser.prototype.setLogger      = CommonParserInterfaces.setLogger;
