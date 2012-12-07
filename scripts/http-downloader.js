@@ -1,4 +1,4 @@
-function HttpDownloader() {
+﻿function HttpDownloader() {
         var maxThreadsAllowed = 5;
         var httpObjs          = new Array(maxThreadsAllowed);
         var headers           = {};
@@ -8,6 +8,7 @@ function HttpDownloader() {
         var savePath;
         var fileUrls;
         var savedFiles;
+        var proxy;
         
         for (var i = 0; i < httpObjs.length; i++)
                 httpObjs[i] = new ActiveXObject('WinHttp.WinHttpRequest.5.1');
@@ -50,6 +51,10 @@ function HttpDownloader() {
                 fileUrls = urls;
                 fileUrls.reverse();
         };
+
+        this.setProxy = function(proxy) {
+                this.proxy = proxy;
+        }
         
         // Let client can add the http header that should be
         // sent to website during the download.
@@ -68,8 +73,17 @@ function HttpDownloader() {
                 var fileRequestTimes  = {};
                 var filesAlreadySaved = [];
                 
-                for (var i = 0; i < httpObjs.length && i < numFiles; i++)
+                for (var i = 0; i < httpObjs.length && i < numFiles; i++) {
+                        var HTTPREQUEST_PROXYSETTING_DIRECT = 1;
+                        var HTTPREQUEST_PROXYSETTING_PROXY  = 2;
+                        
+                        if (this.proxy)
+                                httpObjs[i].SetProxy(HTTPREQUEST_PROXYSETTING_PROXY, this.proxy);
+                        else
+                                httpObjs[i].SetProxy(HTTPREQUEST_PROXYSETTING_DIRECT);
+
                         sendRequest(httpObjs[i], fileUrls.pop());
+                }
                 
                 while (filesAlreadySaved.length < numFiles) {
                         var url             = httpObjs[index].Option(1);
@@ -97,7 +111,7 @@ function HttpDownloader() {
                                         
                                         // Set the max retry times to 3
                                         if (fileRequestTimes[fileName] > 3) {
-                                                writeMessage(fileName + ' 下載超過限制次數，無法下載！');
+                                                writeMessage(fileName + '下載超過限制次數，無法下載！');
                                                 log(fileName + ' failed 3 times, stop to download it!');
                                                 downloadSuccess = true;
                                         }

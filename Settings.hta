@@ -1,0 +1,31 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Settings</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<HTA:APPLICATION
+	applicationname="settings"
+        singleinstance="yes"
+	windowstate="normal"
+	scroll="no"
+	border="thin"
+	MAXIMIZEBUTTON="no"
+>
+
+<link rel="stylesheet" type="text/css" href="css/settings-style.css" />
+</head>
+<body>
+        <br>
+        代理伺服器：
+        <br>
+        <input type="text" id="proxy">
+        <br>
+        <input type="checkbox" id="use_proxy">使用代理
+        <br><br>
+        <input type="button" id="settings_ok" value="確定">
+        <input type="button" id="settings_cancel" value="取消">
+</body>
+<script type="text/javascript" src="scripts/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="scripts/settings-main.js"></script>
+</html>

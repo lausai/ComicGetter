@@ -1,7 +1,5 @@
 ﻿// Move the window to the middle of the screen
-function windowToMiddle() {
-        var windowWidth  = 700;
-        var windowHeight = 650;
+function windowToMiddle(windowWidth, windowHeight) {
         var toX          = (screen.availWidth - windowWidth) / 2;
         var toY          = (screen.availHeight - windowHeight) / 2;
         
@@ -176,7 +174,8 @@ function download(parser, selectedChapters) {
                         var headers = parser.headersNeeded();
                         for (var key in headers)
                                 downloader.addHeader(key, headers[key]);
-
+                        
+                        downloader.setProxy(preference.isUseProxy() ? preference.getProxy() : null);
                         downloader.getFiles();
                         writeMessage(parser.getComicName() + ' ' + chapterName + '下載完畢！');
                 }
@@ -211,7 +210,7 @@ function downloadIfHasTask() {
 //--------------------------------------
 //              code start
 //--------------------------------------
-windowToMiddle();
+windowToMiddle(700, 650);
 
 var parser; 
 var logger         = new Logger();
@@ -292,6 +291,10 @@ $('#download').on('click', function() {
 
         taskQueue.push(task);
         setUIByStatus('after_push_task');
+});
+
+$('#proxy').on('click', function() {
+        window.showModalDialog('Settings.hta', preference, 'dialogHeight:170px; dialogWidth:300px;');
 });
 
 $('#search').on('click', search);

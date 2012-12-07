@@ -37,4 +37,22 @@ function Preference() {
                 // The default save path is the current directory
                 return data['save_path'] ? data['save_path'] : '.';
         };
+
+        this.setProxy = function(value) {
+                data['proxy'] = value;
+        };
+
+        this.getProxy = function() {
+                return data['proxy'];
+        };
+
+        this.isUseProxy = function() {
+                // We need also compare to string 'true' because after we store the value
+                // in a file and read it back, the value will become a string.
+                return ('true' == data['use_proxy'] || true == data['use_proxy']) ? true : false;
+        };
+
+        this.setUseProxy = function(isUse) {
+                data['use_proxy'] = isUse;
+        };
 }

@@ -1,0 +1,22 @@
+body
+{
+        background: black;
+        font-size: 12pt;
+        color: gray;
+}
+
+#proxy
+{
+        width: 98%
+}
+
+#settings_ok
+{
+        margin-left: 15%;
+        width: 35%;
+}
+
+#settings_cancel
+{
+        width: 35%;
+}
