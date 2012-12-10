@@ -213,12 +213,12 @@ function downloadIfHasTask() {
 windowToMiddle(700, 650);
 
 var parser; 
-var logger         = new Logger();
-var downloader     = new HttpDownloader();
-var history        = new ComicHistory();
-var preference     = new Preference();
-var winhttp        = new ActiveXObject('MSXML2.XMLHTTP.3.0');
-var taskQueue      = [];
+var logger     = new Logger();
+var downloader = new HttpDownloader();
+var history    = new ComicHistory();
+var preference = new Preference();
+var winhttp    = new ActiveXObject('MSXML2.XMLHTTP.3.0');
+var taskQueue  = [];
 
 $(window).on('beforeunload', function() {
         history.save();

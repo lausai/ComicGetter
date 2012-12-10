@@ -86,6 +86,13 @@
                 }
                 
                 while (filesAlreadySaved.length < numFiles) {
+                        // We need to check this because the number of files may less than 
+                        // the number of http objects.
+                        if (index >= numFiles) {
+                                index = (index + 1) % httpObjs.length;
+                                continue;
+                        }
+
                         var url             = httpObjs[index].Option(1);
                         var fileName        = url.substr(url.lastIndexOf('/') + 1);
                         var downloadSuccess = false;
@@ -135,8 +142,8 @@
 // var o = new HttpDownloader;
 // var file = ['http://lh4.ggpht.com/totorojack/SACWPp0Z9EI/AAAAAAAACXI/62i3xP2wJA4/tn_lf87982342.jpg',
 //             'http://s1.djyimg.com/i6/90717223906910.jpg',
+//             'http://zz.yy.xx/dfg.jpg',       // A fake link to test error handling
 //             'http://photocdn.sohu.com/20080425/Img256520726.jpg',
-//             'http://zz.yy.xx/dfg.jpg',
 //             'http://ext.pimg.tw/cocococo/4b2a457060d62.jpg',
 //             'http://ext.pimg.tw/zx3267/1185620683.jpg',
 //             'http://image.wangchao.net.cn/nvxing/1269598062255.jpg'];
