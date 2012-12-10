@@ -24,6 +24,7 @@ Comic99770Parser.prototype._parseComicName = function(page) {
                 this._comicName = match[1];
                 return true;
         } else {
+                this.logger.log('get comic name fail!');
                 return false;
         }
 };

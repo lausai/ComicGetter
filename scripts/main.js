@@ -146,7 +146,7 @@ function search() {
         }
 }
 
-function download(parser, selectedChapters) {
+function download(parser, selectedChapters, proxy) {
         clearMessage();
         logger.deleteLog();
         
@@ -175,7 +175,7 @@ function download(parser, selectedChapters) {
                         for (var key in headers)
                                 downloader.addHeader(key, headers[key]);
                         
-                        downloader.setProxy(preference.isUseProxy() ? preference.getProxy() : null);
+                        downloader.setProxy(proxy);
                         downloader.getFiles();
                         writeMessage(parser.getComicName() + ' ' + chapterName + '下載完畢！');
                 }
@@ -202,7 +202,7 @@ function downloadIfHasTask() {
         while (taskQueue.length > 0) {
                 var task = taskQueue.shift();
 
-                download(task['parser'], task['chapters']);
+                download(task['parser'], task['chapters'], task['proxy']);
         }
 }
 
@@ -286,7 +286,8 @@ $('#download').on('click', function() {
 
         var task = {
                 'parser'   : parser,
-                'chapters' : chapters
+                'chapters' : chapters,
+                'proxy'    : (preference.isUseProxy() ? preference.getProxy() : null)
         };
 
         taskQueue.push(task);
