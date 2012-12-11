@@ -118,12 +118,18 @@ function valignCover(obj) {
 }
 
 function search() {
-        var url = $('#url').val();
+        var url          = $('#url').val();
+        var parseSucceed = false;
 
         setUIByStatus('start_search');
         parser = getParserNameByUrl(url);
         
-        if (parser && parser.startParse(url)) {
+        if (parser) {
+                parser.setLogger(logger);
+                parseSucceed = parser.startParse(url);
+        }
+        
+        if (parseSucceed) {
                 var coverUrl = parser.getCoverUrl();
                 // Send an asynchronous http request to get comic cover
                 if (coverUrl)

@@ -56,5 +56,11 @@ var CommonParserInterfaces = {
 
         setLogger : function() {
                 this._logger = logger;
+        },
+
+        getCoverUrl : function() {
+                if (!this._parseSucceed) return null;
+                
+                return this._coverUrl;
         }
 };
