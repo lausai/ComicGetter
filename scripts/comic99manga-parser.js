@@ -117,7 +117,3 @@ Comic99mangaParser.prototype.headersNeeded  = CommonParserInterfaces.headersNeed
 Comic99mangaParser.prototype.getComicUrl    = CommonParserInterfaces.getComicUrl;
 Comic99mangaParser.prototype.setLogger      = CommonParserInterfaces.setLogger;
 Comic99mangaParser.prototype.getCoverUrl    = CommonParserInterfaces.getCoverUrl;
-
-// var o = new Comic99mangaParser();
-// o.startParse('http://dm.99manga.com/comic/14254/');
-// o.getPicUrls(o.getChapters()[0]);
