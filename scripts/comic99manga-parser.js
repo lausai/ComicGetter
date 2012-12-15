@@ -86,9 +86,10 @@ Comic99mangaParser.prototype.getPicUrls = function(chapter) {
 
         // Use a local static variable to store the server list,
         // so we don't need to query the web server every time.
-        if (!Comic99mangaParser.prototype.getPicUrls.serverList) {
-                var jsContent                                      = this._getPageByType('http://dm.99manga.com/d/i.js', 'text');
-                Comic99mangaParser.prototype.getPicUrls.serverList = jsContent.match(/http:\/\/[\d\.:]+\/dm[\d]+/g);
+        var serverList = Comic99mangaParser.prototype.getPicUrls.serverList;
+        if (!serverList) {
+                var jsContent = this._getPageByType('http://dm.99manga.com/d/i.js', 'text');
+                serverList    = jsContent.match(/http:\/\/[\d\.:]+\/dm[\d]+/g);
         }
 
         var picBaseUrls = page.match(/\/ok-comic.+?\.(jpg|png)/ig);

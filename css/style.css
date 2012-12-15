@@ -58,9 +58,15 @@ td.td1
         color: white;
 }
 
+#comic_name
+{
+        display: inline-block;
+        height: 6%;
+}
+
 select.chap
 {
-        width: 44%;
+        width: 45%;
         height: 40%;
         color: white;
         background: black;
@@ -74,7 +80,7 @@ select.chap
 #download
 {
         margin-top: 2%;
-        width: 99%;
+        width: 100.2%;
 }
 
 #msg_block
@@ -96,22 +102,7 @@ select.chap
         background: orange;
 }
 
-#search
+.ctl_button
 {
-        width: 23%;
-}
-
-#dw_to
-{
-        width: 24%;
-}
-
-#open_dw_folder
-{
-        width: 24%;
-}
-
-#proxy
-{
-        width: 24%;
+        width: 23.72%;
 }

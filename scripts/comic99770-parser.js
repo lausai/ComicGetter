@@ -31,7 +31,7 @@ Comic99770Parser.prototype._parseComicName = function(page) {
 
 Comic99770Parser.prototype._parseChapters = function(page) {
         var match;
-        var pattern = /target=_blank>(.+?)<\/a>/g;
+        var pattern = /target=_blank[^>]*>(.+?)<\/a>/g;
 
         this._comicChapters = [];
         while (match = pattern.exec(page))
@@ -83,9 +83,10 @@ Comic99770Parser.prototype.getPicUrls = function(chapter) {
         
         // Use a local static variable to store the server list,
         // so we don't need to query the web server every time.
-        if (!Comic99770Parser.prototype.getPicUrls.serverList) {
-                var jsContent                                    = this._getPageByType('http://99770.cc/x/i.js', 'text');
-                Comic99770Parser.prototype.getPicUrls.serverList = jsContent.match(/http:\/\/[\d\.:]+\/dm[\d]+/g);
+        var serverList = Comic99770Parser.prototype.getPicUrls.serverList;
+        if (!serverList) {
+                var jsContent = this._getPageByType('http://99770.cc/x/i.js', 'text');
+                serverList    = jsContent.match(/http:\/\/[\d\.:]+\/dm[\d]+/g);
         }
 
         var picBaseUrls = page.match(/\/ok-comic.+?\.(jpg|png)/ig);

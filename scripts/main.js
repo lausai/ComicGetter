@@ -22,10 +22,16 @@ function showDownloadedComics(history) {
                 $node.append('<option>' + comics[i] + '</option');
 }
 
-function getParserNameByUrl(url) {
-        if (-1 != url.indexOf('8comic')) return new Comic8Parser();
-        if (-1 != url.indexOf('99770')) return new Comic99770Parser();
-        if (-1 != url.indexOf('99manga')) return new Comic99mangaParser();
+function getParserNameByUrl(parser, url) {
+        // If the parser is already the correct one, then we don't need to create a new one.
+        if (-1 != url.indexOf('8comic'))
+                return (parser && parser.getParserName() == 'Comic8Parser' ? parser : new Comic8Parser());
+
+        if (-1 != url.indexOf('99770'))
+                return (parser && parser.getParserName() == 'Comic99770Parser' ? parser : new Comic99770Parser());
+
+        if (-1 != url.indexOf('99manga'))
+                return (parser && parser.getParserName() == 'Comic99mangaParser' ? parser : new Comic99mangaParser());
 
         return null;
 }
@@ -122,7 +128,7 @@ function search() {
         var parseSucceed = false;
 
         setUIByStatus('start_search');
-        parser = getParserNameByUrl(url);
+        parser = getParserNameByUrl(parser, url);
         
         if (parser) {
                 parser.setLogger(logger);
