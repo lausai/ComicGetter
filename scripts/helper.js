@@ -29,6 +29,5 @@ function saveFileToDisk(data, fileName) {
         ado.Write(data);              // Write binary data to the object
         ado.SaveToFile(fileName, 2);  // Write the data to disk
                                       // If the fileName already exist, the data will overwirte it
-        ado.Flush();
         ado.Close();
 }
