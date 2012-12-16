@@ -8,8 +8,11 @@ function changeCharset(binary, charset) {
         ado.Position = 0;        // Start from the front
         ado.Type     = 2;        // Set to text mode
         ado.Charset  = charset;  // Set the charset
+        
+        var res = ado.ReadText();
 
-        return ado.ReadText();
+        ado.Close();
+        return res;
 }
 
 // On windows system, the file name cannot contain such characters like /\:?"*<>|

@@ -1,13 +1,4 @@
-﻿// Move the window to the middle of the screen
-function windowToMiddle(windowWidth, windowHeight) {
-        var toX          = (screen.availWidth - windowWidth) / 2;
-        var toY          = (screen.availHeight - windowHeight) / 2;
-        
-        window.resizeTo(windowWidth, windowHeight);
-        window.moveTo(toX, toY);
-}
-
-// Display the comics that already downloaded before
+﻿// Display the comics that already downloaded before
 function showDownloadedComics(history) {
         var $node = $('#downloaded_comics');
 
@@ -52,13 +43,13 @@ function sendRequest(url, callback, postData) {
 function setUIByStatus(theStatus) {
         function disableAll() {
                 $('#url').attr('readonly', true);
-                $('#search, #download, #show_select, #downloaded_comics, #dw_to').attr('disabled', true);
+                $('#search, #download, #show_select, #downloaded_comics, #dw_to, #settings').attr('disabled', true);
         }
 
         switch (theStatus) {
                 case 'program_start':
                         $('#url').attr('readonly', false);
-                        $('#search, #downloaded_comics, #dw_to').attr('disabled', false);
+                        $('#search, #downloaded_comics, #dw_to, #settings').attr('disabled', false);
                         $('#download, #show_select').attr('disabled', true);
                         break;
                 case 'start_search':
@@ -67,7 +58,7 @@ function setUIByStatus(theStatus) {
                 case 'after_search':
                         $('#url').attr('readonly', false);
                         $('#download').attr('disabled', true);
-                        $('#search, #show_select, #downloaded_comics, #dw_to').attr('disabled', false);
+                        $('#search, #show_select, #downloaded_comics, #dw_to, #settings').attr('disabled', false);
                         break;
                 case 'after_select':
                         $('#download').attr('disabled', false);
@@ -77,7 +68,7 @@ function setUIByStatus(theStatus) {
                         break;
                 case 'after_push_task':
                         $('#url').attr('readonly', false);
-                        $('#search, #download, #show_select, #downloaded_comics, #dw_to').attr('disabled', false);
+                        $('#search, #download, #show_select, #downloaded_comics, #dw_to, #settings').attr('disabled', false);
                         break;
                 default:
                         ;
@@ -222,7 +213,17 @@ function downloadIfHasTask() {
 //--------------------------------------
 //              code start
 //--------------------------------------
-windowToMiddle(700, 650);
+(function () {
+        var windowWidth  = 700;
+        var windowHeight = 650;
+        var toX          = (screen.availWidth - windowWidth) / 2;
+        var toY          = (screen.availHeight - windowHeight) / 2;
+        
+        window.resizeTo(windowWidth, windowHeight);
+        
+        // Move the window to the middle of the screen
+        window.moveTo(toX, toY);
+})();
 
 var parser; 
 var logger     = new Logger();
@@ -306,7 +307,7 @@ $('#download').on('click', function() {
         setUIByStatus('after_push_task');
 });
 
-$('#proxy').on('click', function() {
+$('#settings').on('click', function() {
         window.showModalDialog('Settings.hta', preference, 'dialogHeight:170px; dialogWidth:300px;');
 });
 

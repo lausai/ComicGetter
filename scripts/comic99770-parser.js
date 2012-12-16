@@ -14,7 +14,7 @@ function Comic99770Parser() {
 }
 
 Comic99770Parser.prototype._checkUrl = function(url) {
-        return /^http:\/\/99770\.cc\/comic\/[0-9]+\/?$/.test(url);
+        return /^http:\/\/99770\.cc\/comic\/[0-9]+\/?$/i.test(url);
 };
 
 Comic99770Parser.prototype._parseComicName = function(page) {
