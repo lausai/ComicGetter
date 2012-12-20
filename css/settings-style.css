@@ -7,7 +7,17 @@ body
 
 #proxy
 {
-        width: 98%
+        width: 35%
+}
+
+#port
+{
+        width: 10%
+}
+
+#port_text
+{
+        margin-left: 5%;
 }
 
 #settings_ok
@@ -19,4 +29,20 @@ body
 #settings_cancel
 {
         width: 35%;
+}
+
+.left_element
+{
+        margin-left: 20px;
+}
+
+#save_path
+{
+
+        width: 71%;
+}
+
+#set_save_path
+{
+        margin-left: 2%;
 }

@@ -308,7 +308,7 @@ $('#download').on('click', function() {
 });
 
 $('#settings').on('click', function() {
-        window.showModalDialog('Settings.hta', preference, 'dialogHeight:170px; dialogWidth:300px;');
+        window.showModalDialog('Settings.hta', preference, 'dialogHeight:200px; dialogWidth:350px;');
 });
 
 $('#search').on('click', search);

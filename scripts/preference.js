@@ -17,11 +17,21 @@ function Preference() {
 
                         file.Close();
                 }
+
+                // The default save path is the current directory
+                if (!data['save_path'])
+                        data['save_path'] = new ActiveXObject('Wscript.Shell').CurrentDirectory;
         })();
 
         this.save = function() {
                 var fso = new ActiveXObject('Scripting.FileSystemObject');
                 var file = fso.OpenTextFile(fileName, 2, true, -1)      // Set to unicode mode
+                
+                // If the save path is the same as the current directory,
+                // means user did not select a save path.
+                // So we should not save the save path to disk.
+                if (data['save_path'] == new ActiveXObject('Wscript.Shell').CurrentDirectory)
+                        delete data['save_path'];
 
                 for (var key in data)
                         file.WriteLine(key + '$' + data[key]);
@@ -34,8 +44,7 @@ function Preference() {
         };
 
         this.getSavePath = function() {
-                // The default save path is the current directory
-                return data['save_path'] ? data['save_path'] : '.';
+                return data['save_path'];
         };
 
         this.setProxy = function(value) {
