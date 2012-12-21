@@ -105,7 +105,10 @@ Comic8Parser.prototype.getPicUrls = function(chapter) {
         var volUrl = this._comicChapterUrls[index];
         var page   = this._getPageByType(volUrl, 'body');
         
-        if (null == page) return null;
+        if (null == page) {
+                this.log('get web content fail!');
+                return null;
+        }
         page = changeCharset(page, 'Big5');
         
         this._referer = volUrl;
@@ -160,3 +163,4 @@ Comic8Parser.prototype.getChapters    = CommonParserInterfaces.getChapters;
 Comic8Parser.prototype.headersNeeded  = CommonParserInterfaces.headersNeeded;    // Must call getPicUrls before calling this method
 Comic8Parser.prototype.getComicUrl    = CommonParserInterfaces.getComicUrl;
 Comic8Parser.prototype.setLogger      = CommonParserInterfaces.setLogger;
+Comic8Parser.prototype.log            = CommonParserInterfaces.log;

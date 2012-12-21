@@ -24,7 +24,7 @@ Comic99770Parser.prototype._parseComicName = function(page) {
                 this._comicName = match[1];
                 return true;
         } else {
-                this._logger.log('get comic name fail!');
+                this.log('get comic name fail!');
                 return false;
         }
 };
@@ -42,7 +42,7 @@ Comic99770Parser.prototype._parseChapters = function(page) {
                 this._comicChapterUrls[i] = 'http://99770.cc/' + this._comicChapterUrls[i];
 
         if (this._comicChapterUrls.length != this._comicChapters.length) {
-                this._logger.log('number of chapters  != number of changer names');
+                this.log('number of chapters  != number of changer names');
                 return false;
         }
 
@@ -76,7 +76,10 @@ Comic99770Parser.prototype.getPicUrls = function(chapter) {
         var volUrl = this._comicChapterUrls[index];
         var page   = this._getPageByType(volUrl, 'body');
 
-        if (null == page) return null;
+        if (null == page) {
+                this.log('get web content fail!');
+                return null;
+        }
         page = changeCharset(page, 'gb2312');
 
         this._referer = volUrl;
@@ -87,18 +90,25 @@ Comic99770Parser.prototype.getPicUrls = function(chapter) {
         if (!serverList) {
                 var jsContent = this._getPageByType('http://99770.cc/x/i.js', 'text');
                 serverList    = jsContent.match(/http:\/\/[\d\.:]+\/dm[\d]+/g);
+                Comic99770Parser.prototype.getPicUrls.serverList = serverList;
         }
 
         var picBaseUrls = page.match(/\/ok-comic.+?\.(jpg|png)/ig);
         
-        if (!Comic99770Parser.prototype.getPicUrls.serverList) return null;
-        if (!picBaseUrls) return null;
+        if (!serverList) {
+                this.log('get server list fail!');
+                return null;
+        }
+        if (!picBaseUrls) {
+                this.log('get pic base urls fail!');
+                return null;
+        }
         
         var urls     = [];
         var serverNo = volUrl.substr(volUrl.indexOf('s=') + 2) - 1;
 
         for (var i = 0; i < picBaseUrls.length; i++)
-                urls.push(Comic99770Parser.prototype.getPicUrls.serverList[serverNo] + picBaseUrls[i]);
+                urls.push(serverList[serverNo] + picBaseUrls[i]);
         
         return urls;
 };
@@ -115,3 +125,4 @@ Comic99770Parser.prototype.headersNeeded  = CommonParserInterfaces.headersNeeded
 Comic99770Parser.prototype.getComicUrl    = CommonParserInterfaces.getComicUrl;
 Comic99770Parser.prototype.setLogger      = CommonParserInterfaces.setLogger;
 Comic99770Parser.prototype.getCoverUrl    = CommonParserInterfaces.getCoverUrl;
+Comic99770Parser.prototype.log            = CommonParserInterfaces.log;
