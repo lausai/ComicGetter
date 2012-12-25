@@ -5,12 +5,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <HTA:APPLICATION
-	applicationname="ComicGetter"
+        applicationname="ComicGetter"
         singleinstance="yes"
-	windowstate="normal"
-	scroll="no"
-	border="thin"
-	MAXIMIZEBUTTON="no"
+        windowstate="normal"
+        scroll="no"
+        border="thin"
+        MAXIMIZEBUTTON="no"
         icon="res\icon.ico"
 >
 
@@ -18,33 +18,55 @@
 </head>
 
 <body>
-	<table>
-	<tr>
-		<td class="td1">
-			<div id="sr_dn_block">
-			歷史紀錄：<select id="downloaded_comics"></select>
-			<br>
-			<input id="url" type="text">
+        <table>
+        <tr>
+                <td class="td1">
+                        <div id="sr_dn_block">
+                        歷史紀錄：<select id="downloaded_comics"></select>
+                        <br>
+                        <input id="url" type="text">
                         <br><br>
-			<input title="搜尋漫畫資訊" id="search" class="ctl_button" type="button" value="搜尋">
-			<input title="設定漫畫下載目錄" id="dw_to" class="ctl_button" type="button" value="下載到">
+                        <input title="搜尋漫畫資訊" id="search" class="ctl_button" type="button" value="搜尋">
+                        <input title="加入任務排程，等待下載" id="download" class="ctl_button" type="button" value="下載">
                         <input title="打開漫畫下載目錄" id="open_dw_folder" class="ctl_button" type="button" value="下載目錄">
-                        <input title="使用者偏好設定" id="settings" class="ctl_button" type="button" value="設定">
-			<br>
-			<span id="comic_name"></span>
+                        <input title="偏好設定" id="settings" class="ctl_button" type="button" value="設定">
+                        <br>
+                        <span id="comic_name"></span>
                         <hr>
-			<br>
-			<select id="comic_chaps" class="chap"></select>
-			<input title="選擇要下載的集數" id="show_select" type="button" value=">>">
-			<select id="select_chaps" class="chap"></select>
-			<input title="加入任務排程，等待下載" id="download" type="button" value="下載">
-			</div>
-		</td>
-		<td class="td2"><div id="cover_block" ></div></td>
-	</tr>
-	</table><hr>
-	<div id="msg_block" class="block_border"></div>
-	<div id="progress_bar"></div>
+                        <br>
+                        <select id="comic_chaps" class="chap"></select>
+                        <input title="選擇要下載的集數" id="show_select" type="button" value=">>">
+                        <select id="select_chaps" class="chap"></select>
+                        </div>
+                </td>
+                <td class="td2"><div id="cover_block" ></div></td>
+        </tr>
+        </table>
+        <br>
+        <div id="tabs">
+                <ul>
+                        <li><a href="#msg_block">下載訊息</a></li>
+                        <li><a href="#task_list_block">任務列表</a></li>
+                </ul>
+                <div id="msg_block"></div>
+                <div id="task_list_block">
+                        <table id="list_title">
+                                <tr>
+                                <th>漫畫</th>
+                                <th class="list_status">集數</th>
+                                <th class="list_status">狀態</th>
+                                </tr>
+                        </table>
+                        <div id="list_container">
+                                <table id="task_list">
+                                </table>
+                        </div>
+                </div>
+        <div/>
+        <div id="progress_bar"></div>
+        <span id="list_menu">
+                <span id="delete_task">刪除任務</span>
+        </span>
 </body>
 
 <script type="text/javascript" src="scripts/jquery-1.8.3.js"></script>

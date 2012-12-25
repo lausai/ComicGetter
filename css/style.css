@@ -1,7 +1,7 @@
 html
 {
-        width: 700px;
-        height: 650px;
+        width: 698px;
+        height: 625px;
 }
 
 body
@@ -16,7 +16,7 @@ body
 table
 {       
         width: 100%;
-        height: 60%;
+        height: 55%;
         table-layout:fixed;
 }
 
@@ -67,37 +67,30 @@ td.td1
 select.chap
 {
         width: 45%;
-        height: 40%;
+        height: 45%;
         color: white;
         background: black;
 }
 
 #show_select
 {
-        margin-bottom: 20%;
-}
-
-#download
-{
-        margin-top: 2%;
-        width: 100.2%;
+        margin-bottom: 21%;
 }
 
 #msg_block
 {
-        border-style: solid;
-        border-width: 1px;
-        border-color: gray;
-        height: 30%;
-        overflow: auto;
-        background: black;
         color: white;
+        overflow: auto;
+        border: 1px solid gray;
+        border-top: none;
+        height: 32%;
+        background: black;
 }
 
 #progress_bar
 {
         /*overflow: hidden;     /*IE6 下要讓 div 高度小於 12px 則必須添加此屬性*/
-        margin-top: 2%;
+        margin-top: 9px;
         height: 3%;
         background: orange;
 }
@@ -105,4 +98,133 @@ select.chap
 .ctl_button
 {
         width: 23.72%;
+}
+
+#tabs ul
+{
+        border-bottom: 1px solid gray;
+        margin: 0;
+        width: 100%;
+}
+
+#tabs a
+{
+        /* Use this to make the dotted lines wrap the whole block when user clicked */
+        display: inline-block; 
+        padding: 3px 10px;
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+}
+
+#tabs li.tabs-default
+{
+        float: left;
+        margin: 0;
+        margin-bottom: -1px;
+        filter: alpha(opacity=50);      /* IE only */
+        opacity: 0.5;
+}
+
+#tabs li:hover
+{
+        filter: alpha(opacity=100);      /* IE only */
+        opacity: 1;
+}
+
+#tabs li.tabs-active
+{
+        filter: alpha(opacity=100);      /* IE only */
+        opacity: 1;
+        border: 1px solid gray;
+        border-bottom: 1px solid black;
+        background-color: black;
+}
+
+#tabs li.tabs-active a
+{
+        cursor: text;
+}
+
+#task_list_block
+{
+        border: 1px solid gray;
+        border-top: none;
+        height: 32%;
+        background: black;
+}
+
+#list_title
+{
+        border-collapse: collapse;
+        height: 0;
+}
+
+#list_title th
+{
+        background: gray;
+        color: white;
+        text-align: left;
+        border: 1px solid black;
+}
+
+#list_title th:first-child
+{
+        width: 70%;
+}
+
+#list_container
+{
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: 88%;
+}
+
+#task_list
+{
+        border-collapse: collapse;
+        height: 0;
+}
+
+#task_list td:first-child
+{
+        width: 70%;
+}
+
+#task_list td
+{
+        border: 1px solid black;
+}
+
+#task_list td.list-hover
+{
+        filter: alpha(opacity=50);      /* IE only */
+        opacity: 0.5;
+        color: white;
+        font-weight: bold;
+        background: gray;
+}
+
+#list_menu
+{
+        position: fixed;
+        display: none;
+}
+
+#list_menu span
+{
+        filter: alpha(opacity=50);      /* IE only */
+        opacity: 0.5;
+        background: white;
+        font-weight: bold;
+        color: black;
+        padding: 4px 10px 4px 10px;
+        display: inline-block;
+        cursor: pointer;
+}
+
+#list_menu span:hover
+{
+        filter: alpha(opacity=80);      /* IE only */
+        opacity: 0.8;
 }

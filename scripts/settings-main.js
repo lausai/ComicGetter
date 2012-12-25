@@ -20,6 +20,7 @@ $('#settings_cancel').on('click', function() {
         window.close();
 });
 
+// Let user choose a folder to save comic
 $('#set_save_path').on('click', function() {
         var WINDOW_HANDLE = 0;  // This should be 0 if in script.
         var OPTIONS       = 0;  // Set to simplest mode, if set to &H10& then

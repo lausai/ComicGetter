@@ -43,13 +43,13 @@ function sendRequest(url, callback, postData) {
 function setUIByStatus(theStatus) {
         function disableAll() {
                 $('#url').attr('readonly', true);
-                $('#search, #download, #show_select, #downloaded_comics, #dw_to, #settings').attr('disabled', true);
+                $('#search, #download, #show_select, #downloaded_comics, #settings').attr('disabled', true);
         }
 
         switch (theStatus) {
                 case 'program_start':
                         $('#url').attr('readonly', false);
-                        $('#search, #downloaded_comics, #dw_to, #settings').attr('disabled', false);
+                        $('#search, #downloaded_comics, #settings').attr('disabled', false);
                         $('#download, #show_select').attr('disabled', true);
                         break;
                 case 'start_search':
@@ -58,7 +58,7 @@ function setUIByStatus(theStatus) {
                 case 'after_search':
                         $('#url').attr('readonly', false);
                         $('#download').attr('disabled', true);
-                        $('#search, #show_select, #downloaded_comics, #dw_to, #settings').attr('disabled', false);
+                        $('#search, #show_select, #downloaded_comics, #settings').attr('disabled', false);
                         break;
                 case 'after_select':
                         $('#download').attr('disabled', false);
@@ -68,7 +68,7 @@ function setUIByStatus(theStatus) {
                         break;
                 case 'after_push_task':
                         $('#url').attr('readonly', false);
-                        $('#search, #download, #show_select, #downloaded_comics, #dw_to, #settings').attr('disabled', false);
+                        $('#search, #download, #show_select, #downloaded_comics, #settings').attr('disabled', false);
                         break;
                 default:
                         ;
@@ -149,9 +149,10 @@ function search() {
         }
 }
 
-function download(parser, selectedChapters, proxy) {
+function download(parser, selectedChapters, proxy, token) {
         clearMessage();
         logger.deleteLog();
+        $('#task_list .' + token + ' td').eq(2).html('下載中');
         
         var fso       = new ActiveXObject('Scripting.FileSystemObject');
         var comicPath = preference.getSavePath() + '\\' + stripInvalidFileNameChars(parser.getComicName());
@@ -183,7 +184,8 @@ function download(parser, selectedChapters, proxy) {
                         writeMessage(parser.getComicName() + ' ' + chapterName + '下載完畢！');
                 }
         }
-
+        
+        $('#task_list .' + token).remove();
         history.addComicInfo(parser.getComicName(), parser.getComicUrl(), parser.getParserName());
         showDownloadedComics(history);
 }
@@ -204,9 +206,15 @@ function pasteIfUrlCopied() {
 function downloadIfHasTask() {
         while (taskQueue.length > 0) {
                 var task = taskQueue.shift();
-
-                download(task['parser'], task['chapters'], task['proxy']);
+                
+                download(task['parser'], task['chapters'], task['proxy'], task['token']);
         }
+}
+
+function hideListMenu() {
+        $('html').off('click', hideListMenu);
+        $('html').off('contextmenu', hideListMenu);
+        $('#list_menu').css('display', 'none');
 }
 
 
@@ -223,6 +231,38 @@ function downloadIfHasTask() {
         
         // Move the window to the middle of the screen
         window.moveTo(toX, toY);
+
+        // Do some necessary works for the tab UI
+        $('#tabs li').addClass('tabs-default')
+                     .eq(0)
+                     .addClass('tabs-active');
+
+        var $links = $('#tabs a');
+
+        for (var i = 1; i < $links.length; i++) {
+                var href = $links.eq(i).attr('href');
+
+                $(href).css('display', 'none');
+        }
+        
+        $links.on('click', function() {
+                $('.tabs-active').removeClass('tabs-active');
+                $(this).parent().addClass('tabs-active');
+                
+                var hrefToShow = $(this).attr('href');
+                var $links     = $('#tabs a');
+
+                for (var i = 0; i < $links.length; i++) {
+                        var href = $links.eq(i).attr('href');
+
+                        if (href != hrefToShow)
+                                $(href).hide();
+                }
+                
+                $(hrefToShow).show();
+                
+                return false;
+        });
 })();
 
 var parser; 
@@ -249,9 +289,13 @@ $('#url').on('keyup', function(e) {
 $('#show_select').on('click', function() {
         if ($('#comic_chaps option:selected').length > 0) {
                 var $selectedChapters = $('#select_chaps');
+                var $selectItems      = $('#comic_chaps').find(':selected');
 
                 $selectedChapters[0].options.length = 0;
-                $selectedChapters.append($('#comic_chaps').find(':selected').clone());
+
+                for (var i = 0; i < $selectItems.length ; i++)
+                        $selectedChapters[0].add(new Option($selectItems[i].text));
+
                 setUIByStatus('after_select');
         }
 });
@@ -262,18 +306,6 @@ $('#downloaded_comics').on('change', function() {
         
         if (comicName)
                 $('#url').val(history.getComicUrl(comicName));
-});
-
-// Let user choose a folder to save comic
-$('#dw_to').on('click', function() {
-        var WINDOW_HANDLE = 0;  // This should be 0 if in script.
-        var OPTIONS       = 0;  // Set to simplest mode, if set to &H10& then
-                                // user can set the folder by typing the path manually
-        var shell  = new ActiveXObject('Shell.Application');
-        var folder = shell.BrowseForFolder(WINDOW_HANDLE, '您要將漫畫下載到哪', OPTIONS);
-        
-        if (folder)
-                preference.setSavePath(folder.Self.Path);
 });
 
 $('#url').on('focus', function() {
@@ -295,15 +327,23 @@ $('#download').on('click', function() {
         $('#select_chaps').find('option').each(function(i, elm) {
                 chapters[i] = elm.text;
         });
-
-
+        
+        var token = new Date().getTime();
         var task = {
                 'parser'   : parser,
                 'chapters' : chapters,
-                'proxy'    : (preference.isUseProxy() ? preference.getProxy() : null)
+                'proxy'    : (preference.isUseProxy() ? preference.getProxy() : null),
+                'token'    : token
         };
 
         taskQueue.push(task);
+
+        var row = '<tr class="' + token + '"><td>' + parser.getComicName() +
+                  '</td><td>' + chapters.length +
+                  '</td><td>等待中</td></tr>';
+
+        $('#task_list').append(row);
+
         setUIByStatus('after_push_task');
 });
 
@@ -312,6 +352,49 @@ $('#settings').on('click', function() {
 });
 
 $('#search').on('click', search);
+
+$('#task_list').on('mouseover', 'td', function() {
+        $(this).addClass('list-hover')
+               .siblings()
+               .addClass('list-hover');
+});
+
+$('#task_list').on('mouseout', 'td', function() {
+        $(this).removeClass('list-hover')
+               .siblings()
+               .removeClass('list-hover');
+});
+
+$('#task_list').on('contextmenu', 'tr', function(e) {
+        $('#list_menu').css('left', e.clientX + 'px')
+                       .css('top', e.clientY + 'px')
+                       .css('display', 'block');
+        
+        // After the list menu displayed, any right click 
+        // or left click will hide the menu.
+        $('html').on('click', hideListMenu);
+        $('html').on('contextmenu', hideListMenu);
+
+        $('#delete_task').data('token', $(this).attr('class'));
+        return false;
+});
+
+$('#delete_task').on('click', function() {
+        var token = $(this).data('token');
+
+        $('#list_menu').css('display', 'none');
+
+        if ($('#task_list .' + token + ' td').eq(2).html() != '下載中') {
+                for (var i = 0; i < taskQueue.length; i++) {
+                        if (taskQueue[i]['token'] == token)
+                                taskQueue.splice(i, 1);
+                }
+        
+                $('#task_list .' + token).remove();
+        } else {
+                alert('下載中任務無法刪除！');
+        }
+});
 
 $('#comic_chaps').attr('multiple', true);
 $('#select_chaps').attr('multiple', true);
