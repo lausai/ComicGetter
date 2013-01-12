@@ -14,7 +14,7 @@ function Comic99mangaParser() {
 }
 
 Comic99mangaParser.prototype._checkUrl = function(url) {
-        return /^http:\/\/dm\.99manga\.com\/comic\/[0-9]+\/$/i.test(url);
+        return /^http:\/\/(dm\.)?99manga\.com\/comic\/[0-9]+\/$/i.test(url);
 };
 
 Comic99mangaParser.prototype._parseComicName = function(page) {
