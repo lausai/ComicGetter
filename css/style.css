@@ -1,7 +1,7 @@
 html
 {
-        width: 698px;
-        height: 625px;
+        height: 100%;
+        width: 100%;
 }
 
 body
@@ -9,8 +9,8 @@ body
         background: black;
         font-size: 12pt;
         color: gray;
-        width: 96%;
-        height: 96%;
+        width: 97%;
+        height: 95.2%;
 }
 
 table
@@ -90,14 +90,14 @@ select.chap
 #progress_bar
 {
         /*overflow: hidden;     /*IE6 下要讓 div 高度小於 12px 則必須添加此屬性*/
-        margin-top: 9px;
+        margin-top: 12px;
         height: 3%;
         background: orange;
 }
 
 .ctl_button
 {
-        width: 23.72%;
+        width: 23.85%;
 }
 
 #tabs ul

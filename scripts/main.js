@@ -47,31 +47,31 @@ function setUIByStatus(theStatus) {
         }
 
         switch (theStatus) {
-                case 'program_start':
-                        $('#url').attr('readonly', false);
-                        $('#search, #downloaded_comics, #settings').attr('disabled', false);
-                        $('#download, #show_select').attr('disabled', true);
-                        break;
-                case 'start_search':
-                        disableAll();
-                        break;
-                case 'after_search':
-                        $('#url').attr('readonly', false);
-                        $('#download').attr('disabled', true);
-                        $('#search, #show_select, #downloaded_comics, #settings').attr('disabled', false);
-                        break;
-                case 'after_select':
-                        $('#download').attr('disabled', false);
-                        break;
-                case 'before_push_task':
-                        disableAll();
-                        break;
-                case 'after_push_task':
-                        $('#url').attr('readonly', false);
-                        $('#search, #download, #show_select, #downloaded_comics, #settings').attr('disabled', false);
-                        break;
-                default:
-                        ;
+        case 'program_start':
+                $('#url').attr('readonly', false);
+                $('#search, #downloaded_comics, #settings').attr('disabled', false);
+                $('#download, #show_select').attr('disabled', true);
+                break;
+        case 'start_search':
+                disableAll();
+                break;
+        case 'after_search':
+                $('#url').attr('readonly', false);
+                $('#download').attr('disabled', true);
+                $('#search, #show_select, #downloaded_comics, #settings').attr('disabled', false);
+                break;
+        case 'after_select':
+                $('#download').attr('disabled', false);
+                break;
+        case 'before_push_task':
+                disableAll();
+                break;
+        case 'after_push_task':
+                $('#url').attr('readonly', false);
+                $('#search, #download, #show_select, #downloaded_comics, #settings').attr('disabled', false);
+                break;
+        default:
+                ;
         }
 }
 
