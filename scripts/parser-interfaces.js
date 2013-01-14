@@ -69,3 +69,16 @@ var CommonParserInterfaces = {
                         this._logger.log(str);
         }
 };
+
+function addParserInterfaces(func)
+{
+        func.prototype._getPageByType = CommonParserInterfaces.getPageByType;
+        func.prototype._getPage       = CommonParserInterfaces.getPage;
+        func.prototype.getComicName   = CommonParserInterfaces.getComicName;
+        func.prototype.getChapters    = CommonParserInterfaces.getChapters;
+        func.prototype.headersNeeded  = CommonParserInterfaces.headersNeeded;    // Must call getPicUrls before calling this method
+        func.prototype.getComicUrl    = CommonParserInterfaces.getComicUrl;
+        func.prototype.setLogger      = CommonParserInterfaces.setLogger;
+        func.prototype.getCoverUrl    = CommonParserInterfaces.getCoverUrl;
+        func.prototype.log            = CommonParserInterfaces.log;
+}

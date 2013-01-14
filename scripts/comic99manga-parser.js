@@ -120,12 +120,4 @@ Comic99mangaParser.prototype.getParserName = function() {
         return 'Comic99mangaParser';
 };
 
-Comic99mangaParser.prototype._getPageByType = CommonParserInterfaces.getPageByType;
-Comic99mangaParser.prototype._getPage       = CommonParserInterfaces.getPage;
-Comic99mangaParser.prototype.getComicName   = CommonParserInterfaces.getComicName;
-Comic99mangaParser.prototype.getChapters    = CommonParserInterfaces.getChapters;
-Comic99mangaParser.prototype.headersNeeded  = CommonParserInterfaces.headersNeeded;    // Must call getPicUrls before calling this method
-Comic99mangaParser.prototype.getComicUrl    = CommonParserInterfaces.getComicUrl;
-Comic99mangaParser.prototype.setLogger      = CommonParserInterfaces.setLogger;
-Comic99mangaParser.prototype.getCoverUrl    = CommonParserInterfaces.getCoverUrl;
-Comic99mangaParser.prototype.log            = CommonParserInterfaces.log;
+addParserInterfaces(Comic99mangaParser);

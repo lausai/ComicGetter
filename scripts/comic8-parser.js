@@ -17,6 +17,7 @@ function Comic8Parser() {
         this._comicName;
         this._comicChapters;
         this._comicChapterUrls;
+        this._coverUrl;
         this._whrObj = new ActiveXObject('WinHttp.WinHttpRequest.5.1');
 }
 
@@ -94,6 +95,12 @@ Comic8Parser.prototype.startParse = function(url) {
         mainPage = changeCharset(mainPage, 'Big5');
         if (!this._parseComicInfo(mainPage)) return false;
         
+        // Get cover image url
+        var arr = this._url.split('/');
+        arr     = arr[arr.length - 1].split('.');
+
+        this._coverUrl = 'http://www.8comic.com/pics/0/' + arr[0] + '.jpg';
+        
         this._parseSucceed = true;
         return true;
 }
@@ -144,23 +151,8 @@ Comic8Parser.prototype.getPicUrls = function(chapter) {
         return urls;
 }
 
-Comic8Parser.prototype.getCoverUrl = function() {
-        if (!this._parseSucceed) return null;
-
-        var arr = this._url.split('/');
-        arr     = arr[arr.length - 1].split('.');
-
-        return 'http://www.8comic.com/pics/0/' + arr[0] + '.jpg';
-}
-
 Comic8Parser.prototype.getParserName = function() {
         return 'Comic8Parser';
 }
 
-Comic8Parser.prototype._getPageByType = CommonParserInterfaces.getPageByType;
-Comic8Parser.prototype.getComicName   = CommonParserInterfaces.getComicName;
-Comic8Parser.prototype.getChapters    = CommonParserInterfaces.getChapters;
-Comic8Parser.prototype.headersNeeded  = CommonParserInterfaces.headersNeeded;    // Must call getPicUrls before calling this method
-Comic8Parser.prototype.getComicUrl    = CommonParserInterfaces.getComicUrl;
-Comic8Parser.prototype.setLogger      = CommonParserInterfaces.setLogger;
-Comic8Parser.prototype.log            = CommonParserInterfaces.log;
+addParserInterfaces(Comic8Parser);

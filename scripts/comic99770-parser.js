@@ -117,12 +117,4 @@ Comic99770Parser.prototype.getParserName = function() {
         return 'Comic99770Parser';
 };
 
-Comic99770Parser.prototype._getPageByType = CommonParserInterfaces.getPageByType;
-Comic99770Parser.prototype._getPage       = CommonParserInterfaces.getPage;
-Comic99770Parser.prototype.getComicName   = CommonParserInterfaces.getComicName;
-Comic99770Parser.prototype.getChapters    = CommonParserInterfaces.getChapters;
-Comic99770Parser.prototype.headersNeeded  = CommonParserInterfaces.headersNeeded;    // Must call getPicUrls before calling this method
-Comic99770Parser.prototype.getComicUrl    = CommonParserInterfaces.getComicUrl;
-Comic99770Parser.prototype.setLogger      = CommonParserInterfaces.setLogger;
-Comic99770Parser.prototype.getCoverUrl    = CommonParserInterfaces.getCoverUrl;
-Comic99770Parser.prototype.log            = CommonParserInterfaces.log;
+addParserInterfaces(Comic99770Parser);

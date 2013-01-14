@@ -18,6 +18,9 @@ function getParserNameByUrl(parser, url) {
         if (-1 != url.indexOf('8comic'))
                 return (parser && parser.getParserName() == 'Comic8Parser' ? parser : new Comic8Parser());
 
+        if (-1 != url.indexOf('mh.99770'))
+                return (parser && parser.getParserName() == 'Comic99770NewParser' ? parser : new Comic99770NewParser());
+
         if (-1 != url.indexOf('99770'))
                 return (parser && parser.getParserName() == 'Comic99770Parser' ? parser : new Comic99770Parser());
 
