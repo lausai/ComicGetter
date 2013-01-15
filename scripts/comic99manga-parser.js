@@ -40,7 +40,7 @@ Comic99mangaParser.prototype._parseChapters = function(page) {
         while (match = pattern.exec(page))
                 this._comicChapters.push(match[1]);
         
-        this._comicChapterUrls = page.match(/page\/[\w\/\.]+\?s=[\d]+/g);
+        this._comicChapterUrls = page.match(/(manga|page)\/[\w\/\.]+\?s=[\d]+/g);
         for (var i = 0; i < this._comicChapterUrls.length; i++)
                 this._comicChapterUrls[i] = 'http://dm.99manga.com/' + this._comicChapterUrls[i];
 

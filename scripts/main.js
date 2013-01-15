@@ -139,7 +139,8 @@ function search() {
 
                 var $comicChapters = $('#comic_chaps');
                 var chapters       = parser.getChapters();
-
+                
+                chapters.sort();
                 $comicChapters[0].options.length = 0;
                 for (var i = 0; i < chapters.length; i++)
                         $comicChapters.append('<option>' + chapters[i] + '</option>');
