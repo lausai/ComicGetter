@@ -164,6 +164,8 @@ function download(parser, selectedChapters, proxy, token) {
         // If the path contains some invalid characters, strip it.
         if (!fso.FolderExists(comicPath))
                 fso.CreateFolder(comicPath);
+        
+        var downloadSuccess = true;
 
         for (var i = 0; i < selectedChapters.length; i++) {
                 var justDownloadIt = true;
@@ -175,7 +177,14 @@ function download(parser, selectedChapters, proxy, token) {
                         fso.CreateFolder(comicPath + '\\' + chapterName);
 
                 if (justDownloadIt) {
-                        downloader.setFileUrls(parser.getPicUrls(selectedChapters[i]));
+                        var picUrls = parser.getPicUrls(selectedChapters[i]);
+
+                        if (!picUrls) {
+                                writeMessage('抓取圖片網址失敗！');
+                                downloadSuccess = false;
+                                break;
+                        }
+                        downloader.setFileUrls(picUrls);
                         downloader.setSavePath(comicPath + '\\' + chapterName);
                         // Add some headers, for example: referer, comic web site 
                         // usually use it to prevent auto download.
@@ -190,8 +199,10 @@ function download(parser, selectedChapters, proxy, token) {
         }
         
         $('#task_list .' + token).remove();
-        history.addComicInfo(parser.getComicName(), parser.getComicUrl(), parser.getParserName());
-        showDownloadedComics(history);
+        if (downloadSuccess) {
+                history.addComicInfo(parser.getComicName(), parser.getComicUrl(), parser.getParserName());
+                showDownloadedComics(history);
+        }
 }
 
 // If user copys http url, then paste it to url input box automatically
