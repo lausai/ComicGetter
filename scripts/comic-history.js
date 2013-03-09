@@ -35,20 +35,23 @@ function ComicHistory() {
 
         this.addComicInfo = function(name, url, parser) {
                 var maxHistoryAllowed = 15;
-
-                for (var i = 0; i < comicInfoList.length; i++) {
-                        if (name == comicInfoList[i]['name'])
-                                return;
-                }
-                
-                if (comicInfoList.length >= maxHistoryAllowed)
-                        comicInfoList.shift();
-
-                comicInfoList.push({
+                var elm = {
                         'name'  : name,
                         'url'   : url,
                         'parser': parser
-                });
+                };
+
+                for (var i = 0; i < comicInfoList.length; i++) {
+                        if (name == comicInfoList[i]['name']) {
+                                elm = comicInfoList.splice(i, 1)[0];
+                                break;
+                        }
+                }
+                
+                comicInfoList.push(elm);
+
+                if (comicInfoList.length > maxHistoryAllowed)
+                        comicInfoList.splice(0, comicInfoList.length - maxHistoryAllowed);
         };
         
         this.save = function() {

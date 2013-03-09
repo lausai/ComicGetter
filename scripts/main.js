@@ -140,7 +140,6 @@ function search() {
                 var $comicChapters = $('#comic_chaps');
                 var chapters       = parser.getChapters();
                 
-                chapters.sort();
                 $comicChapters[0].options.length = 0;
                 for (var i = 0; i < chapters.length; i++)
                         $comicChapters.append('<option>' + chapters[i] + '</option>');
@@ -153,13 +152,13 @@ function search() {
         }
 }
 
-function download(parser, selectedChapters, proxy, token) {
+function download(parser, comic_name, selectedChapters, proxy, token) {
         clearMessage();
         logger.deleteLog();
         $('#task_list .' + token + ' td').eq(2).html('下載中');
         
         var fso       = new ActiveXObject('Scripting.FileSystemObject');
-        var comicPath = preference.getSavePath() + '\\' + stripInvalidFileNameChars(parser.getComicName());
+        var comicPath = preference.getSavePath() + '\\' + stripInvalidFileNameChars(comic_name);
         
         // If the path contains some invalid characters, strip it.
         if (!fso.FolderExists(comicPath))
@@ -194,13 +193,13 @@ function download(parser, selectedChapters, proxy, token) {
                         
                         downloader.setProxy(proxy);
                         downloader.getFiles();
-                        writeMessage(parser.getComicName() + ' ' + chapterName + '下載完畢！');
+                        writeMessage(comic_name + ' ' + chapterName + '下載完畢！');
                 }
         }
         
         $('#task_list .' + token).remove();
         if (downloadSuccess) {
-                history.addComicInfo(parser.getComicName(), parser.getComicUrl(), parser.getParserName());
+                history.addComicInfo(comic_name, parser.getComicUrl(), parser.getParserName());
                 showDownloadedComics(history);
         }
 }
@@ -222,7 +221,8 @@ function downloadIfHasTask() {
         while (taskQueue.length > 0) {
                 var task = taskQueue.shift();
                 
-                download(task['parser'], task['chapters'], task['proxy'], task['token']);
+                download(task['parser'], task['name'], task['chapters'], 
+                         task['proxy'], task['token']);
         }
 }
 
@@ -346,6 +346,7 @@ $('#download').on('click', function() {
         var token = new Date().getTime();
         var task = {
                 'parser'   : parser,
+                'name'     : parser.getComicName(),
                 'chapters' : chapters,
                 'proxy'    : (preference.isUseProxy() ? preference.getProxy() : null),
                 'token'    : token
