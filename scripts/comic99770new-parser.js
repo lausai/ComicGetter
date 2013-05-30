@@ -30,7 +30,7 @@ Comic99770NewParser.prototype._parseComicName = function(page) {
 
 Comic99770NewParser.prototype._parseChapters = function(page) {
         var match;
-        var pattern = /target=_blank>(.+?)(<img|<\/a)/g;
+        var pattern = /href=['\w:\/\.]+>(.+?)(<img|<\/a><a)/g;
 
         this._comicChapters = [];
         while (match = pattern.exec(page))
@@ -39,7 +39,11 @@ Comic99770NewParser.prototype._parseChapters = function(page) {
         this._comicChapterUrls = page.match(/http:\/\/mh\.99770\.cc\/comic\/\d+\/\d+\//g);
 
         if (this._comicChapterUrls.length != this._comicChapters.length) {
-                alert(this._comicChapterUrls.length + ' ' + this._comicChapters.length);
+                this.log('parse fail, chapter number=' + 
+                         this._comicChapters.length +
+                         ' chapter url number=' +
+                         this._comicChapterUrls.length);
+
                 return false;
         }
 

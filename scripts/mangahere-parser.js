@@ -1,7 +1,7 @@
 // Because the parser may be created frequently,
 // use nested function for private members may cause low performance
 // so use a single underscore to indicate private members instead
-function Comic99770Parser() {
+function MangaHereParser() {
         this._url;                        // Comic web site address
         this._parseSucceed;               // Indicate parse success or not
         this._referer;                    // Referer that should send to 8comic web site
@@ -13,13 +13,13 @@ function Comic99770Parser() {
         this._whrObj = new ActiveXObject('WinHttp.WinHttpRequest.5.1');
 }
 
-Comic99770Parser.prototype._checkUrl = function(url) {
-        return /^http:\/\/99770\.cc\/comic\/[0-9]+\/?$/i.test(url);
+MangaHereParser.prototype._checkUrl = function(url) {
+        return /^http:\/\/www\.mangahere\.com\/manga\/[\w]+\/?$/i.test(url);
 };
 
-Comic99770Parser.prototype._parseComicName = function(page) {
-        var match = page.match(/<title>(.+?) /);
-
+MangaHereParser.prototype._parseComicName = function(page) {
+        var match = page.match(/<\/span>(.+?)<\/h1>/);
+        
         if (match) {
                 this._comicName = match[1];
                 return true;
@@ -29,18 +29,19 @@ Comic99770Parser.prototype._parseComicName = function(page) {
         }
 };
 
-Comic99770Parser.prototype._parseChapters = function(page) {
+MangaHereParser.prototype._parseChapters = function(page) {
         var match;
-        var pattern = /target=_blank[^>]*>(.+?)<\/a>/g;
-
+        var pattern = new RegExp(this._comicName + '\\s*\\d+', 'ig');
+        
         this._comicChapters = [];
         while (match = pattern.exec(page))
-                this._comicChapters.push(match[1]);
+                this._comicChapters.push(match[0]);
         
-        this._comicChapterUrls = page.match(/manhua\/[\w\/\.]+\?s=[\d]+/g);
-        for (var i = 0; i < this._comicChapterUrls.length; i++)
-                this._comicChapterUrls[i] = 'http://99770.cc/' + this._comicChapterUrls[i];
-
+        pattern = new RegExp('http://www.mangahere.com/manga/' + this._comicName + '/c\\d+/?', 'ig');
+        this._comicChapterUrls = [];
+        while (match = pattern.exec(page))
+                this._comicChapterUrls.push(match[0]);
+        
         if (this._comicChapterUrls.length != this._comicChapters.length) {
                 this.log('number of chapters  != number of changer names');
                 return false;
@@ -49,19 +50,19 @@ Comic99770Parser.prototype._parseChapters = function(page) {
         return true;
 };
 
-Comic99770Parser.prototype.startParse = function(url) {
+MangaHereParser.prototype.startParse = function(url) {
         this._parseSucceed = false;
 
         if (!this._checkUrl(url)) return false;
         
-        var mainPage = this._getPage(url, 'gb2312');
+        var mainPage = this._getPage(url, 'utf-8');
         if (null == mainPage) return false;
         if (!this._parseComicName(mainPage)) return false;
         if (!this._parseChapters(mainPage)) return false;
         
         // We don't need to check if we can find the cover image url or not,
         // because some comics doesn't have cover image.
-        this._coverUrl = mainPage.match(/http:\/\/img\.99mh\.com[\w\/\d]+\.jpg/i);
+        this._coverUrl = mainPage.match(/http:\/\/[\.\w\/\d]+cover.jpg/i);
 
         this._url          = url;
         this._parseSucceed = true;
@@ -69,7 +70,7 @@ Comic99770Parser.prototype.startParse = function(url) {
         return true;
 };
 
-Comic99770Parser.prototype.getPicUrls = function(chapter) {
+MangaHereParser.prototype.getPicUrls = function(chapter) {
         if (!this._parseSucceed) return null;
 
         var index  = $.inArray(chapter, this._comicChapters);
@@ -80,41 +81,32 @@ Comic99770Parser.prototype.getPicUrls = function(chapter) {
                 this.log('get web content fail!');
                 return null;
         }
-        page = changeCharset(page, 'gb2312');
+        page = changeCharset(page, 'utf-8');
 
         this._referer = volUrl;
-        
-        // Use a local static variable to store the server list,
-        // so we don't need to query the web server every time.
-        var serverList = Comic99770Parser.prototype.getPicUrls.serverList;
-        if (!serverList) {
-                var jsContent = this._getPageByType('http://99770.cc/x/i.js', 'text');
-                serverList    = jsContent.match(/http:\/\/[\w\.:]+\/dm[\d]+/g);
-                Comic99770Parser.prototype.getPicUrls.serverList = serverList;
-        }
 
-        var picBaseUrls = page.match(/\/ok-comic.+?\.(jpg|png)/ig);
-        
-        if (!serverList) {
-                this.log('get server list fail!');
-                return null;
-        }
-        if (!picBaseUrls) {
-                this.log('get pic base urls fail!');
-                return null;
-        }
-        
+        var pattern  = /option value="([\w\d\/\.:]+?)"/g;
+        var end_loop = false;
         var urls     = [];
-        var serverNo = volUrl.substr(volUrl.indexOf('s=') + 2) - 1;
+        var match;
 
-        for (var i = 0; i < picBaseUrls.length; i++)
-                urls.push(serverList[serverNo] + picBaseUrls[i]);
-        
+        while (match = pattern.exec(page)) {
+                if (match[1] == volUrl) {
+                        if (end_loop) break;
+
+                        end_loop = true;
+                }
+                
+                url_page = this._getPage(match[1], 'utf-8');
+                var url  = url_page.match(/http:\/\/z\.mhcdn[\w\.\/\d-]+jpg/);
+                urls.push(url);
+        }
+       
         return urls;
 };
 
-Comic99770Parser.prototype.getParserName = function() {
-        return 'Comic99770Parser';
+MangaHereParser.prototype.getParserName = function() {
+        return 'MangaHereParser';
 };
 
-addParserInterfaces(Comic99770Parser);
+addParserInterfaces(MangaHereParser);

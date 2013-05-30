@@ -54,7 +54,7 @@ var CommonParserInterfaces = {
                 return this._url;
         },
 
-        setLogger : function() {
+        setLogger : function(logger) {
                 this._logger = logger;
         },
 

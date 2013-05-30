@@ -16,17 +16,20 @@ function showDownloadedComics(history) {
 function getParserNameByUrl(parser, url) {
         // If the parser is already the correct one, then we don't need to create a new one.
         if (-1 != url.indexOf('8comic'))
-                return (parser && parser.getParserName() == 'Comic8Parser' ? parser : new Comic8Parser());
+                return new Comic8Parser();
 
         if (-1 != url.indexOf('mh.99770'))
-                return (parser && parser.getParserName() == 'Comic99770NewParser' ? parser : new Comic99770NewParser());
+                return new Comic99770NewParser();
 
         if (-1 != url.indexOf('99770'))
-                return (parser && parser.getParserName() == 'Comic99770Parser' ? parser : new Comic99770Parser());
+                return new Comic99770Parser();
 
         if (-1 != url.indexOf('99manga'))
-                return (parser && parser.getParserName() == 'Comic99mangaParser' ? parser : new Comic99mangaParser());
+                return new Comic99mangaParser();
 
+        if (-1 != url.indexOf('mangahere'))
+                return new MangaHereParser();
+        
         return null;
 }
 
@@ -164,7 +167,7 @@ function download(parser, comic_name, selectedChapters, proxy, token) {
         if (!fso.FolderExists(comicPath))
                 fso.CreateFolder(comicPath);
         
-        var downloadSuccess = true;
+        var downloadSuccess = false;
 
         for (var i = 0; i < selectedChapters.length; i++) {
                 var justDownloadIt = true;
@@ -180,7 +183,6 @@ function download(parser, comic_name, selectedChapters, proxy, token) {
 
                         if (!picUrls) {
                                 writeMessage('抓取圖片網址失敗！');
-                                downloadSuccess = false;
                                 break;
                         }
                         downloader.setFileUrls(picUrls);
@@ -194,6 +196,7 @@ function download(parser, comic_name, selectedChapters, proxy, token) {
                         downloader.setProxy(proxy);
                         downloader.getFiles();
                         writeMessage(comic_name + ' ' + chapterName + '下載完畢！');
+                        downloadSuccess = true;
                 }
         }
         
