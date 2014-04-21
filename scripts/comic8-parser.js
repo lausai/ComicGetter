@@ -22,7 +22,7 @@ function Comic8Parser() {
 }
 
 Comic8Parser.prototype._checkUrl = function(url) {
-        return /^http:\/\/www\.8comic\.com\/(html\/)?[0-9]+\.html$/i.test(url);
+        return /^http:\/\/www\.8comic\.com(:\d+)?\/(html\/)?[0-9]+\.html$/i.test(url);
 }
 
 // Return a table, the content should be 
@@ -105,6 +105,12 @@ Comic8Parser.prototype.startParse = function(url) {
         return true;
 }
 
+// Copied this from 8comic
+Comic8Parser.prototype._ss = function(a, b, c, d) {
+    var e = a.substring(b, b + c);
+    return d == null ? e.replace(/[a-z]*/gi, "") : e;
+}
+
 Comic8Parser.prototype.getPicUrls = function(chapter) {
         if (!this._parseSucceed) return null;
 
@@ -119,33 +125,37 @@ Comic8Parser.prototype.getPicUrls = function(chapter) {
         page = changeCharset(page, 'Big5');
         
         this._referer = volUrl;
+        
+        // This logic comes from 8comic
+        var ch = volUrl.slice(volUrl.indexOf('ch=') + 3);
+        var ti = page.match(/ti=(\d+)/)[1];                // Get ti number
+        var cs = page.match(/cs='(\w+)'/)[1];
+        var cc = cs.length;
 
-        // The pic urls is like the following form
-        // http://img"+sid+".8comic.com/"+did+"/"+itemid+"/"+num+"/"+img+".jpg
-        // We retrieve the sid, did, itemid, num, and img from the page content here
-        var volNum = volUrl.slice(volUrl.indexOf('ch=') + 3);
-        var regex  = new RegExp('["|]{1}' + volNum + ' (\\d+) (\\d+) (\\d+) ([\\d\\w]+[^|"]+?)', 'g');
-        var match  = regex.exec(page);
-        var match2 = page.match(/var itemid=(\d+)/);    // Get itemid
+        var f = 50;
+        var c = '';
 
-        var picUrlBase = 'http://img' + match[1] + '.8comic.com/' + 
-                         match[2] + '/' + match2[1] + '/' + volNum + '/';
+        for (var i = 0; i < cc / f; i++) {
+            if (this._ss(cs, i * f, 4) == ch) {
+                c = this._ss(cs, i * f, f, f);
+                break;
+            }
+        }
 
+        if (c == '')
+           c = this._ss(cs, cc - f, f);
+        
+        var pageNum = this._ss(c, 7, 3);
         var urls = [];
-        for (var i = 1; i <= match[3]; i++) {
-                // The logic of code here are the same as the code on 8comic web site
-                // 8comic use this algorithm to create their image name.
-                var tmp = (parseInt((i-1)/10)%10)+(((i-1)%10)*3);
-                var img;
 
-                if(i < 10) 
-                        img = '00' + i;
-                else if(i < 100) 
-                        img = '0' + i;
-                else img = i;
-
-                img += '_' + match[4].substring(tmp, tmp + 3);
-                urls.push(picUrlBase + img + '.jpg');
+        for (var p = 1; p <= pageNum; p++) {
+            var nn = (p < 10 ? '00' + p : p < 100 ? '0' + p : p);
+            var mm = (parseInt((p - 1) / 10) % 10) + (((p - 1) % 10) * 3);
+            var pic_url = 'http://img' + this._ss(c, 4, 2) + '.8comic.com/' +
+                          this._ss(c, 6, 1) + '/' + ti + '/' +
+                          this._ss(c, 0, 4) + '/' + nn + '_' + this._ss(c, mm + 10, 3, f) + '.jpg';
+            
+            urls.push(pic_url);
         }
 
         return urls;
