@@ -5,3 +5,5 @@ preference
 update.txt
 user_guide.txt
 log.txt
+*~
+*.swp
