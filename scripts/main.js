@@ -260,32 +260,32 @@ function hideListMenu() {
     .eq(0)
     .addClass('tabs-active');
 
-var $links = $('#tabs a');
+    var $links = $('#tabs a');
 
-for (var i = 1; i < $links.length; i++) {
-    var href = $links.eq(i).attr('href');
-
-    $(href).css('display', 'none');
-}
-
-$links.on('click', function() {
-    $('.tabs-active').removeClass('tabs-active');
-    $(this).parent().addClass('tabs-active');
-
-    var hrefToShow = $(this).attr('href');
-    var $links     = $('#tabs a');
-
-    for (var i = 0; i < $links.length; i++) {
+    for (var i = 1; i < $links.length; i++) {
         var href = $links.eq(i).attr('href');
 
-        if (href != hrefToShow)
-    $(href).hide();
+        $(href).css('display', 'none');
     }
 
-    $(hrefToShow).show();
-
-    return false;
-});
+    $links.on('click', function() {
+        $('.tabs-active').removeClass('tabs-active');
+        $(this).parent().addClass('tabs-active');
+    
+        var hrefToShow = $(this).attr('href');
+        var $links     = $('#tabs a');
+    
+        for (var i = 0; i < $links.length; i++) {
+            var href = $links.eq(i).attr('href');
+    
+            if (href != hrefToShow)
+                $(href).hide();
+        }
+    
+        $(hrefToShow).show();
+    
+        return false;
+    });
 })();
 
 var parser; 
@@ -304,8 +304,7 @@ $(window).on('beforeunload', function() {
 // Check if the user press enter key at url input box.
 $('#url').on('keyup', function(e) {
     if (e.keyCode == 13)
-    search();
-
+        search();
 });
 
 // Display the comic chapters that user selected.
@@ -317,9 +316,9 @@ $('#show_select').on('click', function() {
         $selectedChapters[0].options.length = 0;
 
         for (var i = 0; i < $selectItems.length ; i++)
-    $selectedChapters[0].add(new Option($selectItems[i].text));
+            $selectedChapters[0].add(new Option($selectItems[i].text));
 
-setUIByStatus('after_select');
+        setUIByStatus('after_select');
     }
 });
 
@@ -328,7 +327,7 @@ $('#downloaded_comics').on('change', function() {
     var comicName = this.options[this.selectedIndex].text;
 
     if (comicName)
-    $('#url').val(history.getComicUrl(comicName));
+        $('#url').val(history.getComicUrl(comicName));
 });
 
 $('#url').on('focus', function() {
@@ -339,7 +338,7 @@ $('#open_dw_folder').on('click', function() {
     var path = preference.getSavePath();
 
     if (path)
-    new ActiveXObject('Shell.Application').Open(path);
+        new ActiveXObject('Shell.Application').Open(path);
 });
 
 $('#download').on('click', function() {
@@ -354,10 +353,10 @@ $('#download').on('click', function() {
     var token = new Date().getTime();
     var task = {
         'parser'   : parser,
-    'name'     : parser.getComicName(),
-    'chapters' : chapters,
-    'proxy'    : (preference.isUseProxy() ? preference.getProxy() : null),
-    'token'    : token
+        'name'     : parser.getComicName(),
+        'chapters' : chapters,
+        'proxy'    : (preference.isUseProxy() ? preference.getProxy() : null),
+        'token'    : token
     };
 
     taskQueue.push(task);
@@ -394,13 +393,13 @@ $('#task_list').on('contextmenu', 'tr', function(e) {
     .css('top', e.clientY + 'px')
     .css('display', 'block');
 
-// After the list menu displayed, any right click 
-// or left click will hide the menu.
-$('html').on('click', hideListMenu);
-$('html').on('contextmenu', hideListMenu);
-
-$('#delete_task').data('token', $(this).attr('class'));
-return false;
+    // After the list menu displayed, any right click 
+    // or left click will hide the menu.
+    $('html').on('click', hideListMenu);
+    $('html').on('contextmenu', hideListMenu);
+    
+    $('#delete_task').data('token', $(this).attr('class'));
+    return false;
 });
 
 $('#delete_task').on('click', function() {
@@ -411,7 +410,7 @@ $('#delete_task').on('click', function() {
     if ($('#task_list .' + token + ' td').eq(2).html() != '下載中') {
         for (var i = 0; i < taskQueue.length; i++) {
             if (taskQueue[i]['token'] == token)
-    taskQueue.splice(i, 1);
+                taskQueue.splice(i, 1);
         }
 
         $('#task_list .' + token).remove();

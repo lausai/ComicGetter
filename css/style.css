@@ -16,7 +16,7 @@ body
 table
 {       
         width: 100%;
-        height: 55%;
+        height: 56%;
         table-layout:fixed;
 }
 
@@ -53,7 +53,7 @@ td.td1
 
 #url
 {
-        width: 97%;
+        width: 98%;
         background: black;
         color: white;
 }
@@ -90,7 +90,7 @@ select.chap
 #progress_bar
 {
         /*overflow: hidden;     /*IE6 下要讓 div 高度小於 12px 則必須添加此屬性*/
-        margin-top: 12px;
+        margin-top: 8px;
         height: 3%;
         background: orange;
 }
