@@ -1,5 +1,5 @@
 //------------------------------------------------
-//      This class is based on Comic§aVBS,
+//      The code is based on Comic§aVBS,
 //      which is post on PTT Ezsoft
 // 
 //      Comic§aVBS Author: arthurs21.bbs@ptt.cc
@@ -22,7 +22,7 @@ function Comic8Parser() {
 }
 
 Comic8Parser.prototype._checkUrl = function(url) {
-        return /^http:\/\/www\.8comic\.com(:\d+)?\/(html\/)?[0-9]+\.html$/i.test(url);
+        return /^http:\/\/www\.(8comic|comicvip)\.com(:\d+)?\/(html\/)?[0-9]+\.html$/i.test(url);
 }
 
 // Return a table, the content should be 

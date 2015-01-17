@@ -15,7 +15,7 @@ function showDownloadedComics(history) {
 
 function getParserNameByUrl(parser, url) {
     // If the parser is already the correct one, then we don't need to create a new one.
-    if (-1 != url.indexOf('8comic'))
+    if (-1 != url.indexOf('8comic') || -1 != url.indexOf('comicvip'))
         return new Comic8Parser();
 
     if (-1 != url.indexOf('mh.99770'))
@@ -156,7 +156,7 @@ function search() {
         setUIByStatus('after_search');
     } else {
         writeMessage('網頁分析失敗，請檢查您輸入網址是否正確、網路是否連通！');
-    setUIByStatus('program_start');
+        setUIByStatus('program_start');
     }
 }
 
