@@ -41,7 +41,7 @@ Comic8Parser.prototype._getBaseurlTable = function(catid) {
 
         while (match = pattern.exec(jsContent)) {
                 while (match2 = pattern2.exec(match[0]))
-                        table[match2[1]] = match[2];
+                        table[match2[1]] = 'http://www.comicvip.com' + match[2];
         }
 
         return table;

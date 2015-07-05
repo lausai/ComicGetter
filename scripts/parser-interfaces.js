@@ -18,7 +18,7 @@ var CommonParserInterfaces = {
         
                 try {
                         this._whrObj.WaitForResponse();
-        
+
                         if ('body' == type)
                                 return this._whrObj.ResponseBody();
                         else
