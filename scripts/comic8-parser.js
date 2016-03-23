@@ -22,7 +22,7 @@ function Comic8Parser() {
 }
 
 Comic8Parser.prototype._checkUrl = function(url) {
-        return /^http:\/\/www\.(8comic|comicvip)\.com(:\d+)?\/(html\/)?[0-9]+\.html$/i.test(url);
+        return /^http:\/\/www\.(8comic|comicbus|comicvip)\.com(:\d+)?\/(html\/)?[0-9]+\.html$/i.test(url);
 }
 
 // Return a table, the content should be 
@@ -34,7 +34,7 @@ Comic8Parser.prototype._getBaseurlTable = function(catid) {
         if (!jsContent) return null;
 
         var table    = {};
-        var pattern  = /if\(([^"]+)\)\s?\s?baseurl="([\w\d./:_~-]+)";/g;
+        var pattern  = /if\(([^"]+)\)\s?\s?baseurl\+="([\w\d./:_~-]+)";/g;
         var pattern2 = /catid==(\d+)/g;
         var match;
         var match2;
@@ -69,7 +69,7 @@ Comic8Parser.prototype._parseComicInfo = function(mainPage) {
         while (match = pattern.exec(mainPage)) {
                 this._comicChapters.push($.trim(match[4]))              // trim the space
                 this._comicChapterUrls.push(baseurlTable[match[3]] + match[1] + 
-                                            '.html?ch=' + match[2]);
+                    '.html?ch=' + match[2]);
         }
 
         match = this._comicChapters[this._comicChapters.length - 1].match(/id=lch>(.+)<\/font>/);

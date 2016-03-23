@@ -15,7 +15,9 @@ function showDownloadedComics(history) {
 
 function getParserNameByUrl(parser, url) {
     // If the parser is already the correct one, then we don't need to create a new one.
-    if (-1 != url.indexOf('8comic') || -1 != url.indexOf('comicvip'))
+    if (-1 != url.indexOf('8comic') || 
+        -1 != url.indexOf('comicvip') ||
+        -1 != url.indexOf('comicbus'))
         return new Comic8Parser();
 
     if (-1 != url.indexOf('mh.99770'))
