@@ -13,10 +13,10 @@ var CommonParserInterfaces = {
         },
 
         getPageByType : function(url, type) {
-                this._whrObj.Open('GET', url, true);
-                this._whrObj.Send();
-        
                 try {
+                        this._whrObj.Open('GET', url, true);
+                        this._whrObj.Send();
+ 
                         this._whrObj.WaitForResponse();
 
                         if ('body' == type)
@@ -24,6 +24,7 @@ var CommonParserInterfaces = {
                         else
                                 return this._whrObj.ResponseText();
                 } catch (e) {
+                        this.log('getPageByType url: ' + url);
                         this.log('getPageByType fail. Error: ' + e.message);
                         return null;
                 }

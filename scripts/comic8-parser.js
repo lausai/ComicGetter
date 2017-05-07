@@ -34,17 +34,20 @@ Comic8Parser.prototype._getBaseurlTable = function(catid) {
         if (!jsContent) return null;
 
         var table    = {};
-        var pattern  = /if\(([^"]+)\)\s?\s?baseurl\+="([\w\d./:_~-]+)";/g;
+        var pattern  = /if\(([^"]+)\)\s?\s?baseurl="([\w\d./:_~-]+)";/g;
         var pattern2 = /catid==(\d+)/g;
         var match;
         var match2;
+        var findMatch = false;
 
         while (match = pattern.exec(jsContent)) {
-                while (match2 = pattern2.exec(match[0]))
-                        table[match2[1]] = 'http://www.comicvip.com' + match[2];
+            while (match2 = pattern2.exec(match[0])) {
+                table[match2[1]] = match[2];
+                findMatch = true;
+            }
         }
 
-        return table;
+        return findMatch ? table : null;
 }
 
 // Search the comic information from the content of mainPage string
