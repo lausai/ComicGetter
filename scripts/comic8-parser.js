@@ -100,9 +100,9 @@ Comic8Parser.prototype.startParse = function(url) {
         
         // Get cover image url
         var arr = this._url.split('/');
-        arr     = arr[arr.length - 1].split('.');
+        suffix  = arr[arr.length - 1].split('.');
 
-        this._coverUrl = 'http://www.8comic.com/pics/0/' + arr[0] + '.jpg';
+        this._coverUrl = 'http://' + arr[arr.length - 2] + '/pics/0/' + suffix[0] + '.jpg';
         
         this._parseSucceed = true;
         return true;
