@@ -32,6 +32,12 @@ function getParserNameByUrl(parser, url) {
     if (-1 != url.indexOf('mangahere'))
         return new MangaHereParser();
 
+    if (-1 != url.indexOf('manhuagui') ||
+        -1 != url.indexOf('mhgui'))
+    {
+        return new ManhuaguiParser();
+    }
+
     return null;
 }
 
